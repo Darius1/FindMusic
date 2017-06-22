@@ -55,7 +55,7 @@ public class Search {
      * Tests the functionality of the Search class
      * @param args not used
      */
-    
+
     /**
     public static void main(String[] args) {
         Search test = new Search("Earl");
