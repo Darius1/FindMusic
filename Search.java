@@ -1,4 +1,7 @@
-//import org.jsoup.Jsoup;
+import org.jsoup.*;
+import org.jsoup.nodes.*;
+import org.jsoup.parser.*;
+import java.io.*;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program
@@ -30,7 +33,15 @@ public class Search {
      * @return true if the artist released music on that date, false otherwise
      */
     public boolean searchForRelease(String artist, String website, String date) {
-        return false;
+        try {
+            Document doc = Jsoup.connect(website).get();
+            String title = doc.title();
+            System.out.println(title);
+            return true;
+        } catch (IOException e) {
+            System.out.println("There was an error fetching your website.");
+            return false;
+        }
     }
 
     /**
@@ -76,6 +87,7 @@ public class Search {
         System.out.println(test.getArtist());
         System.out.println(test.getSong());
         System.out.println(test);
+        test.searchForRelease("Earl","http://www.google.com","date");
     }
 
 
