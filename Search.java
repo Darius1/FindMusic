@@ -1,6 +1,8 @@
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.parser.*;
+import org.jsoup.select.Elements;
+
 import java.io.*;
 
 /**
@@ -14,14 +16,17 @@ public class Search {
     /** Holds the song title */
     private String song;
 
+
     /**
      * Search object constructor that takes in the artist name as a parameter
      * @param artist the artist's name
+     * @param
      */
     public Search(String artist) {
         this.artist = artist;
         website = "";
         song = "";
+
     }
 
     /**
@@ -35,8 +40,32 @@ public class Search {
     public boolean searchForRelease(String artist, String website, String date) {
         try {
             Document doc = Jsoup.connect(website).get();
-            String title = doc.title();
-            System.out.println(title);
+            Elements findSong = doc.select("div.cover-title");
+            Elements findArtist = doc.select("div.dailySongChart-artist");
+            int numberOfSongsToday = 0;
+
+            System.out.printf("%5s", "Song " + "\t\t\t|\t\tArtist\n");
+            System.out.println("----------------------------------------------");
+
+
+            // Found code similar to this in a Youtube video. Need to learn how to use ArrayLists and remember to read methods inherited section of APIs.
+            for (int i = 0; i < findSong.size(); i++) {
+            	//System.out.println(findArtist.get(i).text());
+
+            	if (findArtist.get(i).text().contains(artist)) {
+            		System.out.println(findSong.get(i).text() + " | " + findArtist.get(i).text());
+            		numberOfSongsToday++;
+            		//song = findSong.get(i).text();
+            	}
+            }
+
+            System.out.println("\nNumber of songs " + artist + " released today: " + numberOfSongsToday);
+
+            if (numberOfSongsToday == 0) {
+        		System.out.println("The artist you selected has not released any music today.");
+        	}
+
+
             return true;
         } catch (IOException e) {
             System.out.println("There was an error fetching your website.");
@@ -83,11 +112,11 @@ public class Search {
 
 
     public static void main(String[] args) {
-        Search test = new Search("Earl");
-        System.out.println(test.getArtist());
-        System.out.println(test.getSong());
-        System.out.println(test);
-        test.searchForRelease("Earl","http://www.google.com","date");
+        //Search test = new Search("Jay Z");
+        //System.out.println(test.getArtist());
+        //System.out.println(test.getSong());
+        //System.out.println(test);
+        //test.searchForRelease("Jay Z","http://www.hotnewhiphop.com","date");
     }
 
 
