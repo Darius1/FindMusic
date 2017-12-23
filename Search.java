@@ -2,6 +2,8 @@ import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
+import edu.ncsu.csc216.get_outdoors.util.SortedArrayList;
+
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,8 @@ public class Search {
     private String website;
     /** Holds the song title */
     private String song;
+    
+    private SortedArrayList<String> sortedSongs;
 
 
     /**
@@ -32,7 +36,7 @@ public class Search {
         this.artist = artist;
         website = "";
         song = "";
-
+        sortedSongs = new SortedArrayList<String>();
     }
 
     /**
@@ -43,7 +47,7 @@ public class Search {
      * @param  date the date
      * @return true if the artist released music on that date, false otherwise
      */
-    public boolean searchForRelease(String artist, String website, String date) {
+    public boolean searchForRelease(String artist, String website) {
         try {
             Document doc = Jsoup.connect(website).get();
             Elements findSong = doc.select("div.cover-title");
@@ -190,28 +194,33 @@ public class Search {
 					System.out.println();
 				}
 				
-				
-				
-				
-				
+				sortedSongs.add(formattedSong(findSong.get(i)));
 			}
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		}
-		
-    	
-    	//SortedArrayList<String> songs = new SortedArrayList<String>();
-    	
-    	
     }
     
-    public String yesterday() {
+    private String formattedSong(Element element) {
+    	
+    	
+    	artist = element.getElementsByClass("dailySongChart-artist").text();
+    	song = element.getElementsByClass("cover-title").text();
+    	
+		return toString();
+	}
+
+	private String yesterday() {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         Date yesterday = cal.getTime();
         
         DateFormat dateFormat = new SimpleDateFormat("EEEE MMM dd, yyyy");
         return dateFormat.format(yesterday);
+    }
+    
+    public SortedArrayList<String> getSortedSongs() {
+    	return sortedSongs;
     }
 
     /**
@@ -223,8 +232,13 @@ public class Search {
         //System.out.println(test.getArtist());
         //System.out.println(test.getSong());
         //System.out.println(test);
-        //test.searchForRelease("Jay Z","http://www.hotnewhiphop.com","date");
+//        test.searchForRelease("Lil Wayne","http://www.hotnewhiphop.com");
         test.findNumberOfSongsReleased("http://www.hotnewhiphop.com");
+//        
+//        for (int i = 0; i < test.getSortedSongs().size(); i++) {
+//        	System.out.println(test.getSortedSongs().get(i));
+//        }
+        
     }
 
 
