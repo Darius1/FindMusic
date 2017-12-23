@@ -1,9 +1,15 @@
 import org.jsoup.*;
 import org.jsoup.nodes.*;
-import org.jsoup.parser.*;
 import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program
@@ -104,19 +110,121 @@ public class Search {
     public String toString() {
         return artist + ": " + song;
     }
+    
+    public void findNumberOfSongsReleased(String website) {
+    	@SuppressWarnings("unused")
+		int songsReleasedToday = 0;
+    	boolean checkedYesterday = false;
+    	
+    	try {
+			Document doc = Jsoup.connect(website).get();
+			Elements findSong = doc.select(".dailySongChart-item");
+
+//			System.out.println(findSong.size());
+			songsReleasedToday = findSong.size();
+			
+			for (int i = 0; i < songsReleasedToday; i++) {
+//				System.out.println(findSong.get(i) + "\n");
+				
+				LocalDate date = LocalDate.now();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+				String currentDate = date.format(formatter);
+				
+//				System.out.println(LocalDate.now().toString());
+//				System.out.println(date.format(formatter));
+//				System.out.println("I is now: " + i + " --    " + findSong.get(i).getElementsByClass("dailySongChart-day-date").size());
+				
+				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
+					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
+						System.out.println("Songs released on " + currentDate);
+						System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
+						System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
+						System.out.println();
+					} else {
+						System.out.println("no songs released today.");
+						System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
+						Scanner scan = new Scanner(System.in);
+						
+						String choice = scan.next();
+						choice = choice.toLowerCase();
+						
+						
+						while (!choice.startsWith("n")) {
+							while (!choice.startsWith("y") && !choice.startsWith("n")) {
+								System.out.println("Please enter either yes or no.");
+								System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
+								
+								choice = scan.next();
+								choice = choice.toLowerCase();
+								
+								if (choice.startsWith("n")) {
+									System.exit(1);
+								}
+							}
+							
+							if (choice.startsWith("y")) {
+								if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
+									System.out.println("now we got some action!");
+									System.out.println("Songs released on " + yesterday());
+									System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
+									System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
+									System.out.println();
+									
+									checkedYesterday = true;
+									break;
+								}
+							}
+						}
+						scan.close();
+						
+						
+						
+						//System.out.println("*  " + findSong.get(i).getElementsByClass("dailySongChart-day-date").text());
+					}
+				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
+					break;
+				} else {
+					System.out.println("no date");
+					System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
+					System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
+					System.out.println();
+				}
+				
+				
+				
+				
+				
+			}
+		} catch (IndexOutOfBoundsException | IOException e) {
+			e.printStackTrace();
+		}
+		
+    	
+    	//SortedArrayList<String> songs = new SortedArrayList<String>();
+    	
+    	
+    }
+    
+    public String yesterday() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        Date yesterday = cal.getTime();
+        
+        DateFormat dateFormat = new SimpleDateFormat("EEEE MMM dd, yyyy");
+        return dateFormat.format(yesterday);
+    }
 
     /**
      * Tests the functionality of the Search class
      * @param args not used
      */
-
-
     public static void main(String[] args) {
-        //Search test = new Search("Jay Z");
+        Search test = new Search("Jay Z");
         //System.out.println(test.getArtist());
         //System.out.println(test.getSong());
         //System.out.println(test);
         //test.searchForRelease("Jay Z","http://www.hotnewhiphop.com","date");
+        test.findNumberOfSongsReleased("http://www.hotnewhiphop.com");
     }
 
 
