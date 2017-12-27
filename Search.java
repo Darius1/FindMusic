@@ -119,6 +119,7 @@ public class Search {
     	@SuppressWarnings("unused")
 		int songsReleasedToday = 0;
     	boolean checkedYesterday = false;
+    	boolean dateChecked = false;
     	
     	try {
 			Document doc = Jsoup.connect(website).get();
@@ -141,11 +142,16 @@ public class Search {
 				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
 					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
 						System.out.println("Songs released on " + currentDate);
+						System.out.println();
 						System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
 						System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
 						System.out.println();
+						dateChecked = true;
 					} else {
-						System.out.println("no songs released today.");
+						if (!dateChecked) {
+							System.out.println("no songs released today.");
+						}
+						
 						System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
 						Scanner scan = new Scanner(System.in);
 						
@@ -168,8 +174,9 @@ public class Search {
 							
 							if (choice.startsWith("y")) {
 								if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
-									System.out.println("now we got some action!");
-									System.out.println("Songs released on " + yesterday());
+//									System.out.println("now we got some action!");
+									System.out.println("\nSongs released on " + yesterday());
+									System.out.println();
 									System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
 									System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
 									System.out.println();
@@ -181,6 +188,9 @@ public class Search {
 						}
 						scan.close();
 						
+						if (choice.startsWith("n")) {
+							System.exit(1);
+						}
 						
 						
 						//System.out.println("*  " + findSong.get(i).getElementsByClass("dailySongChart-day-date").text());
@@ -188,13 +198,16 @@ public class Search {
 				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
 					break;
 				} else {
-					System.out.println("no date");
+//					System.out.println("no date");
 					System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
 					System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
 					System.out.println();
 				}
 				
+			if (findSong.size() > 0) {
 				sortedSongs.add(formattedSong(findSong.get(i)));
+			}
+				
 			}
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
