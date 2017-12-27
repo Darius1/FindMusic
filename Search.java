@@ -23,7 +23,7 @@ public class Search {
     private String website;
     /** Holds the song title */
     private String song;
-    
+    /** Holds all of the scraped songs and sorts them alphabetically */
     private SortedArrayList<String> sortedSongs;
 
 
@@ -57,15 +57,11 @@ public class Search {
             System.out.printf("%5s", "Song " + "\t\t\t|\t\tArtist\n");
             System.out.println("----------------------------------------------");
 
-
-            // Found code similar to this in a Youtube video. Need to learn how to use ArrayLists and remember to read methods inherited section of APIs.
             for (int i = 0; i < findSong.size(); i++) {
-            	//System.out.println(findArtist.get(i).text());
 
             	if (findArtist.get(i).text().contains(artist)) {
             		System.out.println(findSong.get(i).text() + " | " + findArtist.get(i).text());
             		numberOfSongsToday++;
-            		//song = findSong.get(i).text();
             	}
             }
 
@@ -74,8 +70,7 @@ public class Search {
             if (numberOfSongsToday == 0) {
         		System.out.println("The artist you selected has not released any music today.");
         	}
-
-
+            
             return true;
         } catch (IOException e) {
             System.out.println("There was an error fetching your website.");
@@ -115,9 +110,12 @@ public class Search {
         return artist + ": " + song;
     }
     
-    public void findNumberOfSongsReleased(String website) {
-    	@SuppressWarnings("unused")
-		int songsReleasedToday = 0;
+    /**
+     * Searches the specified website for songs that were released today and the previous day
+     * @param website the website being searched
+     */
+    public void findNewSongs(String website) {
+    	int songsReleasedToday = 0;
     	boolean checkedYesterday = false;
     	boolean dateChecked = false;
     	
@@ -125,20 +123,17 @@ public class Search {
 			Document doc = Jsoup.connect(website).get();
 			Elements findSong = doc.select(".dailySongChart-item");
 
-//			System.out.println(findSong.size());
 			songsReleasedToday = findSong.size();
 			
 			for (int i = 0; i < songsReleasedToday; i++) {
-//				System.out.println(findSong.get(i) + "\n");
 				
+		// Example formatted date: Monday Jan 1, 2000		
 				LocalDate date = LocalDate.now();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
 				String currentDate = date.format(formatter);
-				
-//				System.out.println(LocalDate.now().toString());
-//				System.out.println(date.format(formatter));
-//				System.out.println("I is now: " + i + " --    " + findSong.get(i).getElementsByClass("dailySongChart-day-date").size());
-				
+
+		// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
+		// Need to check this tag to get the date information
 				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
 					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
 						System.out.println("Songs released on " + currentDate);
@@ -174,7 +169,7 @@ public class Search {
 							
 							if (choice.startsWith("y")) {
 								if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
-//									System.out.println("now we got some action!");
+
 									System.out.println("\nSongs released on " + yesterday());
 									System.out.println();
 									System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
@@ -191,14 +186,10 @@ public class Search {
 						if (choice.startsWith("n")) {
 							System.exit(1);
 						}
-						
-						
-						//System.out.println("*  " + findSong.get(i).getElementsByClass("dailySongChart-day-date").text());
 					}
 				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
 					break;
 				} else {
-//					System.out.println("no date");
 					System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
 					System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
 					System.out.println();
@@ -214,15 +205,25 @@ public class Search {
 		}
     }
     
+    /**
+     * Grabs the song and artist text from the element parameter
+     *
+     * @param element the part of the webpage the data will be gathered from
+     * @return a String in the format "Artist: Song"
+     */
     private String formattedSong(Element element) {
-    	
-    	
     	artist = element.getElementsByClass("dailySongChart-artist").text();
     	song = element.getElementsByClass("cover-title").text();
     	
 		return toString();
 	}
 
+    /**
+     * Gets yesterday's date and formats it in the form "Day of week Month Date, Year"
+     * Example formatted date: Monday Jan 1, 2000
+     *
+     * @return a properly formatted date
+     */
 	private String yesterday() {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
@@ -232,6 +233,11 @@ public class Search {
         return dateFormat.format(yesterday);
     }
     
+	/**
+	 * Gets the sortedSongs arrayList
+	 *
+	 * @return the arrayList
+	 */
     public SortedArrayList<String> getSortedSongs() {
     	return sortedSongs;
     }
@@ -246,7 +252,7 @@ public class Search {
         //System.out.println(test.getSong());
         //System.out.println(test);
 //        test.searchForRelease("Lil Wayne","http://www.hotnewhiphop.com");
-        test.findNumberOfSongsReleased("http://www.hotnewhiphop.com");
+        test.findNewSongs("http://www.hotnewhiphop.com");
 //        
 //        for (int i = 0; i < test.getSortedSongs().size(); i++) {
 //        	System.out.println(test.getSortedSongs().get(i));
