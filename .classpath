@@ -3,5 +3,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="lib" path="jsoup-1.10.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Darius McFarland/Downloads/commons-cli-1.4-bin/commons-cli-1.4/commons-cli-1.4.jar" sourcepath="C:/Users/Darius McFarland/Downloads/commons-cli-1.4-bin/commons-cli-1.4/commons-cli-1.4-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/Darius%20McFarland/Downloads/commons-cli-1.4-bin/commons-cli-1.4/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Darius McFarland/Downloads/commons-cli-1.4-bin/commons-cli-1.4"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

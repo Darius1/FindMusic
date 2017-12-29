@@ -1,3 +1,9 @@
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -25,6 +31,8 @@ public class Search {
     private String song;
     /** Holds all of the scraped songs and sorts them alphabetically */
     private SortedArrayList<String> sortedSongs;
+    
+    private CommandLine cmd;
 
 
     /**
@@ -37,6 +45,15 @@ public class Search {
         website = "";
         song = "";
         sortedSongs = new SortedArrayList<String>();
+    }
+    
+    public Search(String[] args) {
+    	cmd = null;
+    	sortedSongs = new SortedArrayList<String>();
+    	
+    	if (setupCLI(args)) {
+    		parseInput(args);
+    	}
     }
 
     /**
@@ -127,13 +144,13 @@ public class Search {
 			
 			for (int i = 0; i < songsReleasedToday; i++) {
 				
-		// Example formatted date: Monday Jan 1, 2000		
+				// Example formatted date: Monday Jan 1, 2000		
 				LocalDate date = LocalDate.now();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
 				String currentDate = date.format(formatter);
 
-		// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
-		// Need to check this tag to get the date information
+				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
+				// Need to check this tag to get the date information
 				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
 					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
 						System.out.println("Songs released on " + currentDate);
@@ -241,23 +258,64 @@ public class Search {
     public SortedArrayList<String> getSortedSongs() {
     	return sortedSongs;
     }
+    
+    public boolean setupCLI(String[] args) {
+    	Options findMusicOptions = new Options();
+    	
+    	findMusicOptions.addOption("s", "search", false, "search for songs released today");
+    	findMusicOptions.addOption("h", "help", false, "displays usage information");
+    	findMusicOptions.addOption("a", "artist", true, "searches for newly released music by the specified artist");
+    	findMusicOptions.addOption("v", "version", false, "displays the version information");
+    	findMusicOptions.addOption("o", "order", false, "orders the released songs alphabetically and displays them");
+    	
+    	CommandLineParser parser = new DefaultParser();
+    	
+    	try {
+    		cmd = parser.parse(findMusicOptions, args);
+    		
+    		// Prints the help message
+    		if (cmd.hasOption("h")) {
+    			throw new ParseException("");
+    		}
+    		
+    		// Prevents the user from running the program with no arguments
+    		if (cmd.getOptions().length == 0) {
+    			throw new ParseException("");
+    		}
+    	} catch (ParseException e) {
+    		HelpFormatter formatter = new HelpFormatter();
+    		String footer = "\nPlease report issues at https://github.com/Darius1/FindMusic/issues";
+    		
+    		formatter.printHelp("Search", null, findMusicOptions, footer, true);
+    		return false;
+    	}
+    	
+    	return true;
+    	
+    }
+    
+    public void parseInput(String[] args) {
+    	if (cmd.hasOption("s")) {
+    		findNewSongs("http://www.hotnewhiphop.com");
+    	} else if (cmd.hasOption("h")) {
+    		//print help information
+    	} else if (cmd.hasOption("a")) {
+    		searchForRelease(args[1], "http://www.hotnewhiphop.com");
+    	} else if (cmd.hasOption("v")) {
+    		System.out.println("FindMusic Version 1.0 Initial Release");
+    	} else if (cmd.hasOption("o")) {
+    		// Currently not working
+    		//findNewSongs("http://www.hotnewhiphop.com");
+    		getSortedSongs();
+    	}
+    }
 
     /**
      * Tests the functionality of the Search class
      * @param args not used
      */
     public static void main(String[] args) {
-        Search test = new Search("Jay Z");
-        //System.out.println(test.getArtist());
-        //System.out.println(test.getSong());
-        //System.out.println(test);
-//        test.searchForRelease("Lil Wayne","http://www.hotnewhiphop.com");
-        test.findNewSongs("http://www.hotnewhiphop.com");
-//        
-//        for (int i = 0; i < test.getSortedSongs().size(); i++) {
-//        	System.out.println(test.getSortedSongs().get(i));
-//        }
-        
+    	new Search(args);
     }
 
 
