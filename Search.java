@@ -50,7 +50,6 @@ public class Search {
     public Search(String[] args) {
     	cmd = null;
     	sortedSongs = new SortedArrayList<String>();
-    	
     	if (setupCLI(args)) {
     		parseInput(args);
     	}
@@ -180,7 +179,8 @@ public class Search {
 								choice = choice.toLowerCase();
 								
 								if (choice.startsWith("n")) {
-									System.exit(1);
+									//System.exit(1);
+									break;
 								}
 							}
 							
@@ -201,7 +201,8 @@ public class Search {
 						scan.close();
 						
 						if (choice.startsWith("n")) {
-							System.exit(1);
+							//System.exit(1);
+							break;
 						}
 					}
 				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
@@ -222,6 +223,56 @@ public class Search {
 		}
     }
     
+    /**
+     * Fetches the songs released today and yesterday with no system output
+     *
+     * @param website the website the songs will be scraped from
+     */
+    public void findNewSongsNoPrompts(String website) {
+    	int songsReleasedToday = 0;
+    	boolean checkedYesterday = false;
+    	boolean dateChecked = false;
+    	
+    	try {
+			Document doc = Jsoup.connect(website).get();
+			Elements findSong = doc.select(".dailySongChart-item");
+
+			songsReleasedToday = findSong.size();
+			
+			for (int i = 0; i < songsReleasedToday; i++) {
+				
+				// Example formatted date: Monday Jan 1, 2000		
+				LocalDate date = LocalDate.now();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+				String currentDate = date.format(formatter);
+
+				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
+				// Need to check this tag to get the date information
+				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
+					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
+						dateChecked = true;
+					} else {
+						if (!dateChecked) {
+							System.out.println("no songs released today.");
+						}
+					}
+					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
+						checkedYesterday = true;
+					}
+				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
+					break;
+				} else {
+				}
+				
+			if (findSong.size() > 0) {
+				sortedSongs.add(formattedSong(findSong.get(i)));
+			}
+				
+			}
+		} catch (IndexOutOfBoundsException | IOException e) {
+			e.printStackTrace();
+		}
+    }
     /**
      * Grabs the song and artist text from the element parameter
      *
@@ -259,6 +310,21 @@ public class Search {
     	return sortedSongs;
     }
     
+    /**
+     * Prints out songs in alphabetical order
+     */
+    public void printSongs() {
+    	for (int i = 0; i < sortedSongs.size(); i++) {
+    		System.out.println(i + 1 + ".\t" + sortedSongs.get(i));
+    	}
+    }
+    
+    /**
+     * Initializes the command line interface
+     *
+     * @param args the arguments needed
+     * @return true if the interface is created without error
+     */
     public boolean setupCLI(String[] args) {
     	Options findMusicOptions = new Options();
     	
@@ -294,6 +360,11 @@ public class Search {
     	
     }
     
+    /**
+     * Runs the program based off of the arguments provided
+     *
+     * @param args the command line arguments entered by the user
+     */
     public void parseInput(String[] args) {
     	if (cmd.hasOption("s")) {
     		findNewSongs("http://www.hotnewhiphop.com");
@@ -304,9 +375,8 @@ public class Search {
     	} else if (cmd.hasOption("v")) {
     		System.out.println("FindMusic Version 1.0 Initial Release");
     	} else if (cmd.hasOption("o")) {
-    		// Currently not working
-    		//findNewSongs("http://www.hotnewhiphop.com");
-    		getSortedSongs();
+    		findNewSongsNoPrompts("http://www.hotnewhiphop.com");
+    		printSongs();
     	}
     }
 
@@ -317,6 +387,4 @@ public class Search {
     public static void main(String[] args) {
     	new Search(args);
     }
-
-
 }
