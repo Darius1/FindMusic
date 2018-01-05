@@ -21,6 +21,7 @@ import java.util.Scanner;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program
+ * @author Darius McFarland
  */
 public class Search {
     /** Holds the artist name */
@@ -37,8 +38,8 @@ public class Search {
 
     /**
      * Search object constructor that takes in the artist name as a parameter
+     * 
      * @param artist the artist's name
-     * @param
      */
     public Search(String artist) {
         this.artist = artist;
@@ -47,6 +48,11 @@ public class Search {
         sortedSongs = new SortedArrayList<String>();
     }
     
+    /**
+     * Search constructor that will be used for the CLI
+     *
+     * @param args the command line arguments the user supplies
+     */
     public Search(String[] args) {
     	cmd = null;
     	sortedSongs = new SortedArrayList<String>();
@@ -60,7 +66,7 @@ public class Search {
      * released by the artist for that day
      * @param  artist the artist's name
      * @param  website the website url
-     * @param  date the date
+     * 
      * @return true if the artist released music on that date, false otherwise
      */
     public boolean searchForRelease(String artist, String website) {
