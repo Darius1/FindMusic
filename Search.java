@@ -76,13 +76,10 @@ public class Search {
             Elements findArtist = doc.select("div.dailySongChart-artist");
             int numberOfSongsToday = 0;
 
-            System.out.printf("%5s", "Song " + "\t\t\t|\t\tArtist\n");
-            System.out.println("----------------------------------------------");
-
             for (int i = 0; i < findSong.size(); i++) {
-
             	if (findArtist.get(i).text().contains(artist)) {
-            		System.out.println(findSong.get(i).text() + " | " + findArtist.get(i).text());
+            		System.out.println("Song: " + findSong.get(i).text());
+            		System.out.println("Artist: " + findArtist.get(i).text());
             		numberOfSongsToday++;
             	}
             }
