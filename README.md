@@ -3,8 +3,8 @@ The find music program allows a user to specify an artist and website of their c
 
 ## Things to do
 - [x] Finsh the Search class
-- [ ] Implement the main program that will handle user interaction
-- [ ] Fix issues
+- [x] Implement the main program that will handle user interaction
+- [x] Fix issues
 - [ ] Add support for more websites
 - [ ] Add the ability to search for songs by date
 
