@@ -2,11 +2,11 @@ package personal.darius.sort;
 
 import java.util.Comparator;
 
+import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
 
 /**
  * The Sorter Class handles all of the sorting for the program
- * 
  * 
  * @author Darius McFarland
  *
@@ -25,10 +25,7 @@ public class Sorter<E> {
 	}
 	
 	/** 
-	   * Sorts the list alphabetically 
-	   * 
-	   * The code for this method is based on the mergeSort code on slide 33 of the Dictionaries  
-	   * Powerpoint 
+	   * Sorts the list alphabetically using a merge sort
 	   * 
 	   * @param list the arraylist that will be sorted 
 	   * @return the alphabetically sorted list 
@@ -62,7 +59,6 @@ public class Sorter<E> {
 	/**
 	 * Handles merging the lists back into one
 	 * 
-	 *
 	 * @param list the entire list
 	 * @param left the left sublist
 	 * @param right the right sublist
