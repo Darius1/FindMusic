@@ -154,4 +154,3 @@ public class ArrayList<E extends Comparable<E>> {
 	}
 
 }
-
