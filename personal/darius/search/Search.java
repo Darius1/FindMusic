@@ -9,6 +9,9 @@ import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
+import personal.darius.data.Song;
+import personal.darius.dataStructures.ArrayList;
+
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,31 +26,29 @@ import java.util.Scanner;
  * @author Darius McFarland
  */
 public class Search {
-    /** Holds the artist name */
-    private String artist;
+	
     /** Holds the website url that will be searched */
     private String website;
-    /** Holds the song title */
-    private String song;
- // TODO Update to use the new array list class
-    /** Holds all of the scraped songs and sorts them alphabetically */
-//    private SortedArrayList<String> sortedSongs;
     
+    /** Holds all of the scraped songs and sorts them alphabetically */
+    private ArrayList<Song> sortedSongs;
+    
+    /** Reads the arguments supplied by the user on the command line */
     private CommandLine cmd;
 
 
-    /**
-     * Search object constructor that takes in the artist name as a parameter
-     * 
-     * @param artist the artist's name
-     */
-    public Search(String artist) {
-        this.artist = artist;
-        website = "";
-        song = "";
-     // TODO Update to use the new array list class
-//        sortedSongs = new SortedArrayList<String>();
-    }
+//    /**
+//     * Search object constructor that takes in the artist name as a parameter
+//     * 
+//     * @param artist the artist's name
+//     */
+//    public Search(String artist) {
+//        this.artist = artist;
+//        website = "";
+//        song = "";
+//     // TODO Update to use the new array list class
+////        sortedSongs = new SortedArrayList<String>();
+//    }
     
     /**
      * Search constructor that will be used for the CLI
@@ -56,8 +57,7 @@ public class Search {
      */
     public Search(String[] args) {
     	cmd = null;
-    	// TODO Update to use the new array list class
-//    	sortedSongs = new SortedArrayList<String>();
+    	sortedSongs = new ArrayList<Song>();
     	if (setupCLI(args)) {
     		parseInput(args);
     	}
@@ -100,35 +100,11 @@ public class Search {
     }
 
     /**
-     * Returns the artist's name
-     * @return artist
-     */
-    public String getArtist() {
-        return artist;
-    }
-
-    /**
      * Returns the website name
      * @return website
      */
     public String getWebsite() {
         return website;
-    }
-
-    /**
-     * Returns the song title
-     * @return song
-     */
-    public String getSong() {
-        return song;
-    }
-
-    /**
-     * Creates a string in the format "Artist: Song"
-     * @return string
-     */
-    public String toString() {
-        return artist + ": " + song;
     }
     
     /**
@@ -220,7 +196,7 @@ public class Search {
 				
 			if (findSong.size() > 0) {
 				// TODO Update to use the new array list class
-//				sortedSongs.add(formattedSong(findSong.get(i)));
+				sortedSongs.insert(formattedSong(findSong.get(i)));
 			}
 				
 			}
@@ -272,7 +248,7 @@ public class Search {
 				
 			if (findSong.size() > 0) {
 				// TODO Update to use the new array list class
-//				sortedSongs.add(formattedSong(findSong.get(i)));
+				sortedSongs.insert(formattedSong(findSong.get(i)));
 			}
 				
 			}
@@ -280,17 +256,20 @@ public class Search {
 			e.printStackTrace();
 		}
     }
+    
     /**
      * Grabs the song and artist text from the element parameter
      *
      * @param element the part of the webpage the data will be gathered from
-     * @return a String in the format "Artist: Song"
+     * @return a new Song object
      */
-    private String formattedSong(Element element) {
-    	artist = element.getElementsByClass("dailySongChart-artist").text();
-    	song = element.getElementsByClass("cover-title").text();
+    private Song formattedSong(Element element) {
+    	String artist = element.getElementsByClass("dailySongChart-artist").text();
+    	String title = element.getElementsByClass("cover-title").text();
     	
-		return toString();
+    	Song newSong = new Song(artist, title);
+    	
+		return newSong;
 	}
 
     /**
@@ -307,15 +286,6 @@ public class Search {
         DateFormat dateFormat = new SimpleDateFormat("EEEE MMM dd, yyyy");
         return dateFormat.format(yesterday);
     }
-    
-//	/**
-//	 * Gets the sortedSongs arrayList
-//	 *
-//	 * @return the arrayList
-//	 */
-//    public SortedArrayList<String> getSortedSongs() {
-//    	return sortedSongs;
-//    }
     
     /**
      * Prints out songs in alphabetical order

@@ -25,36 +25,35 @@ public class Sorter<E> {
 	}
 	
 	/** 
-	   * Sorts the list alphabetically using a merge sort
-	   * 
-	   * @param list the arraylist that will be sorted 
-	   * @return the alphabetically sorted list 
-	   */ 
-	  public ArrayList<Song> alphabeticalSort(ArrayList<Song> list) { 
-	    ArrayList<Song> left = new ArrayList<Song>(); 
-	    ArrayList<Song> right = new ArrayList<Song>(); 
-	     
-	    if (list.size() > 1) { 
-	      int middle = list.size() / 2; 
-	
-	       
-	      for (int i = 0; i < list.size(); i++) { 
-	        if (i < middle) { 
-	          left.insert(list.get(i)); 
-	        } else { 
-	          right.insert(list.get(i)); 
-	        } 
-	      } 
-	       
-	      alphabeticalSort(left); 
-	      alphabeticalSort(right); 
-	       
-	      list = merge(list, left, right, a); 
-	    } 
-	     
-	     
-	    return list; 
-	  } 
+	 * Sorts the list alphabetically using a merge sort
+	 * 
+	 * @param list the arraylist that will be sorted 
+	 * @return the alphabetically sorted list 
+	 */ 
+	public ArrayList<Song> alphabeticalSort(ArrayList<Song> list) { 
+		ArrayList<Song> left = new ArrayList<Song>(); 
+		ArrayList<Song> right = new ArrayList<Song>(); 
+
+		if (list.size() > 1) { 
+			int middle = list.size() / 2; 
+
+
+			for (int i = 0; i < list.size(); i++) { 
+				if (i < middle) { 
+					left.insert(list.get(i)); 
+				} else { 
+					right.insert(list.get(i)); 
+				} 
+			} 
+
+			alphabeticalSort(left); 
+			alphabeticalSort(right); 
+
+			list = merge(list, left, right, a); 
+		} 
+		
+		return list; 
+	} 
 	
 	/**
 	 * Handles merging the lists back into one
