@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
+import personal.darius.sort.Sorter;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -195,7 +196,6 @@ public class Search {
 				}
 				
 			if (findSong.size() > 0) {
-				// TODO Update to use the new array list class
 				sortedSongs.insert(formattedSong(findSong.get(i)));
 			}
 				
@@ -247,7 +247,6 @@ public class Search {
 				}
 				
 			if (findSong.size() > 0) {
-				// TODO Update to use the new array list class
 				sortedSongs.insert(formattedSong(findSong.get(i)));
 			}
 				
@@ -291,6 +290,10 @@ public class Search {
      * Prints out songs in alphabetical order
      */
     public void printSongs() {
+    	Sorter<Song> sorter = new Sorter<Song>();
+    	
+    	sorter.alphabeticalSort(sortedSongs);
+    	
     	for (int i = 0; i < sortedSongs.size(); i++) {
     		System.out.println(i + 1 + ".\t" + sortedSongs.get(i));
     	}
