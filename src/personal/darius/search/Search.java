@@ -176,6 +176,7 @@ public class Search {
 									System.out.println();
 									
 									checkedYesterday = true;
+									
 									break;
 								}
 							}
@@ -200,6 +201,9 @@ public class Search {
 			}
 				
 			}
+			
+			// add the songs to the database
+			System.out.println("Adding to database!");
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		}
