@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
+import personal.darius.database.SongStorage;
 import personal.darius.sort.Sorter;
 
 import java.io.*;
@@ -161,7 +162,6 @@ public class Search {
 								choice = choice.toLowerCase();
 								
 								if (choice.startsWith("n")) {
-									//System.exit(1);
 									break;
 								}
 							}
@@ -176,7 +176,6 @@ public class Search {
 									System.out.println();
 									
 									checkedYesterday = true;
-									
 									break;
 								}
 							}
@@ -184,7 +183,6 @@ public class Search {
 						scan.close();
 						
 						if (choice.startsWith("n")) {
-							//System.exit(1);
 							break;
 						}
 					}
@@ -196,14 +194,23 @@ public class Search {
 					System.out.println();
 				}
 				
-			if (findSong.size() > 0) {
-				sortedSongs.insert(formattedSong(findSong.get(i)));
-			}
+				
+				if (findSong.size() > 0) {
+					// Determines what the release date of the song should be
+					if (checkedYesterday) {
+						sortedSongs.insert(formattedSong(findSong.get(i), yesterday()));
+					} else {
+						sortedSongs.insert(formattedSong(findSong.get(i), currentDate));
+					}
+				}
 				
 			}
 			
 			// add the songs to the database
 			System.out.println("Adding to database!");
+			SongStorage database = new SongStorage();
+			database.addSongsToDatabase(sortedSongs);
+			
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		}
@@ -250,9 +257,13 @@ public class Search {
 				} else {
 				}
 				
-			if (findSong.size() > 0) {
-				sortedSongs.insert(formattedSong(findSong.get(i)));
-			}
+				if (findSong.size() > 0) {
+					if (checkedYesterday) {
+						sortedSongs.insert(formattedSong(findSong.get(i), yesterday()));
+					} else {
+						sortedSongs.insert(formattedSong(findSong.get(i), currentDate));
+					}
+				}
 				
 			}
 		} catch (IndexOutOfBoundsException | IOException e) {
@@ -264,13 +275,15 @@ public class Search {
      * Grabs the song and artist text from the element parameter
      *
      * @param element the part of the webpage the data will be gathered from
+     * @param releaseDate the date the song first appeared in the search
      * @return a new Song object
      */
-    private Song formattedSong(Element element) {
+    private Song formattedSong(Element element, String releaseDate) {
     	String artist = element.getElementsByClass("dailySongChart-artist").text();
     	String title = element.getElementsByClass("cover-title").text();
     	
     	Song newSong = new Song(artist, title);
+    	newSong.setReleaseDate(releaseDate);
     	
 		return newSong;
 	}

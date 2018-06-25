@@ -14,6 +14,9 @@ public class Song implements Comparable<Song> {
     /** Holds the song's title */
     private String title;
     
+    /** The day the song first appeared in the search */
+    private String releaseDate;
+    
     /**
      * Creates a new Song object that contains a song title and artist
      *
@@ -39,6 +42,23 @@ public class Song implements Comparable<Song> {
      */
     public String getTitle() {
     	return title;
+    }
+    
+    /**
+     * Sets the releaseDate field
+     *
+     * @param date the date the releaseDate field will be set to
+     */
+    public void setReleaseDate(String date) {
+    	this.releaseDate = date;
+    }
+    
+    /**
+     * Returns the song release date
+     * @return the release date of the song
+     */
+    public String getReleaseDate() {
+    	return releaseDate;
     }
     
     /**
