@@ -9,6 +9,11 @@ import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
 import personal.darius.database.SongStorage;
@@ -27,7 +32,7 @@ import java.util.Scanner;
  * This class will handle all of the search functionality in the FindMusic program
  * @author Darius McFarland
  */
-public class Search {
+public class Search extends Application {
 	
     /** Holds the website url that will be searched */
     private String website;
@@ -52,18 +57,19 @@ public class Search {
 ////        sortedSongs = new SortedArrayList<String>();
 //    }
     
-    /**
-     * Search constructor that will be used for the CLI
-     *
-     * @param args the command line arguments the user supplies
-     */
-    public Search(String[] args) {
-    	cmd = null;
-    	sortedSongs = new ArrayList<Song>();
-    	if (setupCLI(args)) {
-    		parseInput(args);
-    	}
-    }
+// Have to comment out the constructor so the GUI will show
+//    /**
+//     * Search constructor that will be used for the CLI
+//     *
+//     * @param args the command line arguments the user supplies
+//     */
+//    public Search(String[] args) {
+//    	cmd = null;
+//    	sortedSongs = new ArrayList<Song>();
+//    	if (setupCLI(args)) {
+//    		parseInput(args);
+//    	}
+//    }
 
     /**
      * Searches a website using an artist's name and current date as parameters to find new music
@@ -382,6 +388,24 @@ public class Search {
      * @param args not used
      */
     public static void main(String[] args) {
-    	new Search(args);
+    	// Used for the CLI
+//    	new Search(args);
+    	
+    	// Used for the GUI
+    	launch(args);
+    }
+    
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+    	primaryStage.setTitle("Find Music");
+    	
+    	Button searchButton = new Button("Search");
+    	
+    	StackPane layout = new StackPane();
+    	layout.getChildren().add(searchButton);
+    	
+    	Scene scene = new Scene(layout, 300, 250);
+    	primaryStage.setScene(scene);
+    	primaryStage.show();
     }
 }
