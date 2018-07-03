@@ -10,9 +10,17 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
@@ -42,7 +50,12 @@ public class Search extends Application {
     
     /** Reads the arguments supplied by the user on the command line */
     private CommandLine cmd;
-
+    
+    Scene mainScene;
+    
+    Scene resultsScene;
+    
+    Scene optionsScene;
 
 //    /**
 //     * Search object constructor that takes in the artist name as a parameter
@@ -398,14 +411,58 @@ public class Search extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	primaryStage.setTitle("Find Music");
+  	
+    	Label findMusicLabel = new Label("Find Music");
     	
     	Button searchButton = new Button("Search");
+    	searchButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.setScene(resultsScene);
+				
+			}
+		});
+    	searchButton.setPrefSize(100, 20);
     	
-    	StackPane layout = new StackPane();
-    	layout.getChildren().add(searchButton);
+    	Button optionsButton = new Button("Options");
+    	optionsButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.setScene(optionsScene);
+			}
+		});
+    	optionsButton.setPrefSize(100, 20);
     	
-    	Scene scene = new Scene(layout, 300, 250);
-    	primaryStage.setScene(scene);
+    	// MainLayout will be the main splash screen for the program
+    	BorderPane mainLayout = new BorderPane();
+    	
+    	StackPane center = new StackPane();
+    	center.getChildren().add(findMusicLabel);
+    	
+    	HBox bottom = new HBox();
+    	bottom.setPadding(new Insets(15, 12, 15, 12));
+    	bottom.setSpacing(10);
+    	bottom.setStyle("-fx-background-color: #336699;");
+    	bottom.setAlignment(Pos.BOTTOM_CENTER);
+    	
+    	bottom.getChildren().addAll(searchButton, optionsButton);
+    	
+    	mainLayout.setBottom(bottom);
+    	mainLayout.setCenter(center);
+    	
+    	mainScene = new Scene(mainLayout, 500, 250);
+    	
+    	// ResultsLayout will display all of the songs that were released today
+    	StackPane resultsLayout = new StackPane();
+    	resultsScene = new Scene(resultsLayout, 500, 250);
+    	
+    	VBox optionsLayout = new VBox(20);
+    	optionsScene = new Scene(optionsLayout, 500, 250);
+    	
+    	// Set the mainScene as the default scene to display on program start
+    	primaryStage.setScene(mainScene);
     	primaryStage.show();
     }
 }
