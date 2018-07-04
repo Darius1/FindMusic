@@ -10,13 +10,19 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +42,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.Optional;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program
@@ -58,33 +64,10 @@ public class Search extends Application {
     Scene resultsScene;
     
     Scene optionsScene;
-
-//    /**
-//     * Search object constructor that takes in the artist name as a parameter
-//     * 
-//     * @param artist the artist's name
-//     */
-//    public Search(String artist) {
-//        this.artist = artist;
-//        website = "";
-//        song = "";
-//     // TODO Update to use the new array list class
-////        sortedSongs = new SortedArrayList<String>();
-//    }
     
-// Have to comment out the constructor so the GUI will show
-//    /**
-//     * Search constructor that will be used for the CLI
-//     *
-//     * @param args the command line arguments the user supplies
-//     */
-//    public Search(String[] args) {
-//    	cmd = null;
-//    	sortedSongs = new ArrayList<Song>();
-//    	if (setupCLI(args)) {
-//    		parseInput(args);
-//    	}
-//    }
+    ListView<Song> songList;
+    
+    ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
 
     /**
      * Searches a website using an artist's name and current date as parameters to find new music
@@ -156,63 +139,26 @@ public class Search extends Application {
 				// Need to check this tag to get the date information
 				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
 					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
-						System.out.println("Songs released on " + currentDate);
-						System.out.println();
-						System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
-						System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
-						System.out.println();
+						
 						dateChecked = true;
 					} else {
 						if (!dateChecked) {
 							System.out.println("no songs released today.");
 						}
-						
-						System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
-						Scanner scan = new Scanner(System.in);
-						
-						String choice = scan.next();
-						choice = choice.toLowerCase();
-						
-						
-						while (!choice.startsWith("n")) {
-							while (!choice.startsWith("y") && !choice.startsWith("n")) {
-								System.out.println("Please enter either yes or no.");
-								System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
-								
-								choice = scan.next();
-								choice = choice.toLowerCase();
-								
-								if (choice.startsWith("n")) {
-									break;
-								}
-							}
-							
-							if (choice.startsWith("y")) {
-								if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
 
-									System.out.println("\nSongs released on " + yesterday());
-									System.out.println();
-									System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
-									System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
-									System.out.println();
-									
-									checkedYesterday = true;
-									break;
-								}
+						if (showSongsFromYesterday()) {
+							if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
+								checkedYesterday = true;
 							}
-						}
-						scan.close();
-						
-						if (choice.startsWith("n")) {
+						} else {
 							break;
 						}
+						
 					}
 				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
 					break;
 				} else {
-					System.out.println("Artist: " + findSong.get(i).getElementsByClass("dailySongChart-artist").text());
-					System.out.println("Song: " + findSong.get(i).getElementsByClass("cover-title").text());
-					System.out.println();
+					
 				}
 				
 				
@@ -220,17 +166,20 @@ public class Search extends Application {
 					// Determines what the release date of the song should be
 					if (checkedYesterday) {
 						sortedSongs.insert(formattedSong(findSong.get(i), yesterday()));
+						searchedSongs.add(formattedSong(findSong.get(i), yesterday()));
 					} else {
 						sortedSongs.insert(formattedSong(findSong.get(i), currentDate));
+						searchedSongs.add(formattedSong(findSong.get(i), currentDate));
 					}
 				}
 				
 			}
 			
 			// add the songs to the database
-			System.out.println("Adding to database!");
-			SongStorage database = new SongStorage();
-			database.addSongsToDatabase(sortedSongs);
+//			System.out.println("Adding to database!");
+//			SongStorage database = new SongStorage();
+//			database.addSongsToDatabase(sortedSongs);
+			
 			
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
@@ -397,15 +346,41 @@ public class Search extends Application {
     		printSongs();
     	}
     }
+    
+    /**
+     * Creates a dialog box that gives the user the choice to display songs that released yesterday
+     *
+     * @return true if the user clicks yes, no otherwise
+     */
+    private boolean showSongsFromYesterday() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(null);
+ 
+        alert.setHeaderText(null);
+        
+        // Gets rid of the default ok button
+        alert.getButtonTypes().clear();
+        alert.setContentText("Would you like to check for songs that released yesterday?");
+        
+        ButtonType yes = new ButtonType("Yes");
+        ButtonType no = new ButtonType("No");
+        
+        alert.getButtonTypes().addAll(yes, no);
+ 
+        Optional<ButtonType> choice = alert.showAndWait();
+        
+        if (choice.get() == yes) {
+        	return true;
+        } else {
+        	return false;
+        }
+    }
 
     /**
      * Tests the functionality of the Search class
      * @param args not used
      */
     public static void main(String[] args) {
-    	// Used for the CLI
-//    	new Search(args);
-    	
     	// Used for the GUI
     	launch(args);
     }
@@ -416,11 +391,24 @@ public class Search extends Application {
   	
     	Label findMusicLabel = new Label("Find Music");
     	
+    	Label optionsLabel = new Label("Search Options");
+    	
+    	Label resultsLabel = new Label("Search Results");
+    	
     	Button searchButton = new Button("Search");
     	searchButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				sortedSongs = new ArrayList<Song>();
+				
+				// Clears out the list view so the program will start "fresh" each time search is
+				// pressed
+				if (!searchedSongs.isEmpty()) {
+					searchedSongs.clear();
+				}
+				
+				findNewSongs("http://www.hotnewhiphop.com");
 				primaryStage.setScene(resultsScene);
 				
 			}
@@ -479,7 +467,15 @@ public class Search extends Application {
     	// ResultsLayout will display all of the songs that were released today
     	BorderPane resultsLayout = new BorderPane();
     	
+    	songList = new ListView<Song>();
+    	
+    	// Adds the search results to the list view
+    	songList.setItems(searchedSongs);
+    	
+    	
+    	
     	VBox songResults = new VBox();
+    	songResults.getChildren().add(songList);
     	
     	HBox resultsBottom = new HBox();
     	resultsBottom.setPadding(new Insets(15, 12, 15, 12));
@@ -488,8 +484,15 @@ public class Search extends Application {
     	resultsBottom.setAlignment(Pos.BOTTOM_CENTER);
     	resultsBottom.getChildren().add(returnButton2);
     	
+    	HBox resultsTop = new HBox();
+    	resultsTop.setPadding(new Insets(15, 12, 15, 12));
+    	resultsTop.setSpacing(10);
+    	resultsTop.setAlignment(Pos.CENTER);
+    	resultsTop.getChildren().add(resultsLabel);
+    	
     	resultsLayout.setBottom(resultsBottom);
     	resultsLayout.setCenter(songResults);
+    	resultsLayout.setTop(resultsTop);
     	
     	
     	resultsScene = new Scene(resultsLayout, 500, 250);
@@ -504,10 +507,19 @@ public class Search extends Application {
     	optionsBottom.setAlignment(Pos.BOTTOM_CENTER);
     	optionsBottom.getChildren().add(returnButton);
     	
+    	HBox optionsTop = new HBox();
+    	optionsTop.setPadding(new Insets(15, 12, 15, 12));
+    	optionsTop.setSpacing(10);
+    	optionsTop.setStyle("-fx-background-color: #336699;");
+    	optionsTop.setAlignment(Pos.BOTTOM_CENTER);
+    	optionsTop.getChildren().add(optionsLabel);
+    	
+    	
     	VBox optionsList = new VBox();
     	
     	optionsLayout.setBottom(optionsBottom);
     	optionsLayout.setLeft(optionsList);
+    	optionsLayout.setTop(optionsTop);
     	
     	optionsScene = new Scene(optionsLayout, 500, 250);
     	
