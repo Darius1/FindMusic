@@ -1,10 +1,4 @@
 package personal.darius.search;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -24,6 +18,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -32,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
-import personal.darius.database.SongStorage;
 import personal.darius.sort.Sorter;
 
 import java.io.*;
@@ -42,6 +36,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -56,9 +51,6 @@ public class Search extends Application {
     /** Holds all of the scraped songs and sorts them alphabetically */
     private ArrayList<Song> sortedSongs;
     
-    /** Reads the arguments supplied by the user on the command line */
-    private CommandLine cmd;
-    
     Scene mainScene;
     
     Scene resultsScene;
@@ -68,6 +60,8 @@ public class Search extends Application {
     ListView<Song> songList;
     
     ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
+    
+    int searchChoice;
 
     /**
      * Searches a website using an artist's name and current date as parameters to find new music
@@ -77,26 +71,28 @@ public class Search extends Application {
      * 
      * @return true if the artist released music on that date, false otherwise
      */
-    public boolean searchForRelease(String artist, String website) {
+    public boolean searchForRelease(String artist, String website, Stage primaryStage) {
         try {
+        	// Don't allow the user to enter a blank artist name
+        	if (artist.equals("")) {
+        		createInvalidArtistNamePopup(primaryStage);
+        		return false;
+        	}
+        	
             Document doc = Jsoup.connect(website).get();
-            Elements findSong = doc.select("div.cover-title");
-            Elements findArtist = doc.select("div.dailySongChart-artist");
-            int numberOfSongsToday = 0;
+            Elements findSong = doc.select(".dailySongChart-item");
 
+            // Example formatted date: Monday Jan 1, 2000		
+			LocalDate date = LocalDate.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+			String currentDate = date.format(formatter);
+			
             for (int i = 0; i < findSong.size(); i++) {
-            	if (findArtist.get(i).text().contains(artist)) {
-            		System.out.println("Song: " + findSong.get(i).text());
-            		System.out.println("Artist: " + findArtist.get(i).text());
-            		numberOfSongsToday++;
+            	if (findSong.get(i).text().contains(artist)) {
+            		sortedSongs.insert(formattedSong(findSong.get(i), currentDate));
+					searchedSongs.add(formattedSong(findSong.get(i), currentDate));
             	}
             }
-
-            System.out.println("\nNumber of songs " + artist + " released today: " + numberOfSongsToday);
-
-            if (numberOfSongsToday == 0) {
-        		System.out.println("The artist you selected has not released any music today.");
-        	}
             
             return true;
         } catch (IOException e) {
@@ -146,7 +142,7 @@ public class Search extends Application {
 							System.out.println("no songs released today.");
 						}
 
-						if (showSongsFromYesterday()) {
+						if (createShowSongsFromYesterdayPopup()) {
 							if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
 								checkedYesterday = true;
 							}
@@ -157,8 +153,6 @@ public class Search extends Application {
 					}
 				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
 					break;
-				} else {
-					
 				}
 				
 				
@@ -181,61 +175,6 @@ public class Search extends Application {
 //			database.addSongsToDatabase(sortedSongs);
 			
 			
-		} catch (IndexOutOfBoundsException | IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    /**
-     * Fetches the songs released today and yesterday with no system output
-     *
-     * @param website the website the songs will be scraped from
-     */
-    public void findNewSongsNoPrompts(String website) {
-    	int songsReleasedToday = 0;
-    	boolean checkedYesterday = false;
-    	boolean dateChecked = false;
-    	
-    	try {
-			Document doc = Jsoup.connect(website).get();
-			Elements findSong = doc.select(".dailySongChart-item");
-
-			songsReleasedToday = findSong.size();
-			
-			for (int i = 0; i < songsReleasedToday; i++) {
-				
-				// Example formatted date: Monday Jan 1, 2000		
-				LocalDate date = LocalDate.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
-				String currentDate = date.format(formatter);
-
-				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
-				// Need to check this tag to get the date information
-				if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && !checkedYesterday) {
-					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(currentDate)) {
-						dateChecked = true;
-					} else {
-						if (!dateChecked) {
-							System.out.println("no songs released today.");
-						}
-					}
-					if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
-						checkedYesterday = true;
-					}
-				} else if (findSong.get(i).getElementsByClass("dailySongChart-day-date").size() == 1 && checkedYesterday) {
-					break;
-				} else {
-				}
-				
-				if (findSong.size() > 0) {
-					if (checkedYesterday) {
-						sortedSongs.insert(formattedSong(findSong.get(i), yesterday()));
-					} else {
-						sortedSongs.insert(formattedSong(findSong.get(i), currentDate));
-					}
-				}
-				
-			}
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		}
@@ -281,69 +220,11 @@ public class Search extends Application {
     	
     	sorter.alphabeticalSort(sortedSongs);
     	
+    	// Not the most efficient solution. Songs are already added to the observable list when
+    	// the search is first performed. Still n log n time since the merge sort drives runtime
+    	
     	for (int i = 0; i < sortedSongs.size(); i++) {
-    		System.out.println(i + 1 + ".\t" + sortedSongs.get(i));
-    	}
-    }
-    
-    /**
-     * Initializes the command line interface
-     *
-     * @param args the arguments needed
-     * @return true if the interface is created without error
-     */
-    public boolean setupCLI(String[] args) {
-    	Options findMusicOptions = new Options();
-    	
-    	findMusicOptions.addOption("s", "search", false, "search for songs released today");
-    	findMusicOptions.addOption("h", "help", false, "displays usage information");
-    	findMusicOptions.addOption("a", "artist", true, "searches for newly released music by the specified artist");
-    	findMusicOptions.addOption("v", "version", false, "displays the version information");
-    	findMusicOptions.addOption("o", "order", false, "orders the released songs alphabetically and displays them");
-    	
-    	CommandLineParser parser = new DefaultParser();
-    	
-    	try {
-    		cmd = parser.parse(findMusicOptions, args);
-    		
-    		// Prints the help message
-    		if (cmd.hasOption("h")) {
-    			throw new ParseException("");
-    		}
-    		
-    		// Prevents the user from running the program with no arguments
-    		if (cmd.getOptions().length == 0) {
-    			throw new ParseException("");
-    		}
-    	} catch (ParseException e) {
-    		HelpFormatter formatter = new HelpFormatter();
-    		String footer = "\nPlease report issues at https://github.com/Darius1/FindMusic/issues";
-    		
-    		formatter.printHelp("Search", null, findMusicOptions, footer, true);
-    		return false;
-    	}
-    	
-    	return true;
-    	
-    }
-    
-    /**
-     * Runs the program based off of the arguments provided
-     *
-     * @param args the command line arguments entered by the user
-     */
-    public void parseInput(String[] args) {
-    	if (cmd.hasOption("s")) {
-    		findNewSongs("http://www.hotnewhiphop.com");
-    	} else if (cmd.hasOption("h")) {
-    		//print help information
-    	} else if (cmd.hasOption("a")) {
-    		searchForRelease(args[1], "http://www.hotnewhiphop.com");
-    	} else if (cmd.hasOption("v")) {
-    		System.out.println("FindMusic Version 1.0 Initial Release");
-    	} else if (cmd.hasOption("o")) {
-    		findNewSongsNoPrompts("http://www.hotnewhiphop.com");
-    		printSongs();
+    		searchedSongs.set(i, sortedSongs.get(i));
     	}
     }
     
@@ -352,7 +233,7 @@ public class Search extends Application {
      *
      * @return true if the user clicks yes, no otherwise
      */
-    private boolean showSongsFromYesterday() {
+    private boolean createShowSongsFromYesterdayPopup() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(null);
  
@@ -375,6 +256,60 @@ public class Search extends Application {
         	return false;
         }
     }
+    
+    private String createSearchByArtistNamePopup() {
+    	TextInputDialog dialog = new TextInputDialog();
+    	 
+    	dialog.setTitle("Artist Search");
+    	dialog.setHeaderText(null);
+    	dialog.setContentText("What artist would you like to search for?");
+    	 
+    	Optional<String> result = dialog.showAndWait();
+    	
+    	return result.get();
+    }
+    
+    private void createInvalidArtistNamePopup(Stage primaryStage) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle(null);
+ 
+        alert.setHeaderText(null);
+        
+        // Gets rid of the default ok button
+        alert.getButtonTypes().clear();
+        alert.setContentText("Invalid Artist Name");
+        
+        ButtonType ok = new ButtonType("Ok");
+        
+        alert.getButtonTypes().addAll(ok);
+ 
+        Optional<ButtonType> choice = alert.showAndWait();
+        
+        if (choice.get() == ok) {
+        	primaryStage.setScene(mainScene);
+        } 
+    }
+    
+    private void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(null);
+ 
+        alert.setHeaderText(null);
+        
+        // Gets rid of the default ok button
+        alert.getButtonTypes().clear();
+        alert.setContentText(artist + " has not released any music today.");
+        
+        ButtonType ok = new ButtonType("Ok");
+        
+        alert.getButtonTypes().addAll(ok);
+ 
+        Optional<ButtonType> choice = alert.showAndWait();
+        
+        if (choice.get() == ok) {
+        	primaryStage.setScene(mainScene);
+        } 
+    }
 
     /**
      * Tests the functionality of the Search class
@@ -387,7 +322,7 @@ public class Search extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	primaryStage.setTitle("Find Music");
+    	primaryStage.setTitle("Find Music version 1.0");
   	
     	Label findMusicLabel = new Label("Find Music");
     	
@@ -408,9 +343,31 @@ public class Search extends Application {
 					searchedSongs.clear();
 				}
 				
-				findNewSongs("http://www.hotnewhiphop.com");
-				primaryStage.setScene(resultsScene);
-				
+				if (searchChoice == 1) {
+					findNewSongs("http://www.hotnewhiphop.com");
+					primaryStage.setScene(resultsScene);
+				} else if (searchChoice == 2) {
+					String artist = createSearchByArtistNamePopup();
+					// Will throw a NoSuchElement Exception if the user presses cancel when the
+					// artist search popup appears
+					try {
+						searchForRelease(artist, "http://www.hotnewhiphop.com", primaryStage);
+					} catch (NoSuchElementException e) {
+						// Return to the main menu
+					}
+					
+					if (searchedSongs.isEmpty()) {
+						// display a popup letting the user no their selected artist hasn't
+						// released anything today
+						createNoSongsByArtistPopup(artist, primaryStage);
+					} else {
+						primaryStage.setScene(resultsScene);
+					}
+				} else if (searchChoice == 3) {
+					findNewSongs("http://www.hotnewhiphop.com");
+					printSongs();
+					primaryStage.setScene(resultsScene);
+				}
 			}
 		});
     	searchButton.setPrefSize(100, 20);
@@ -531,17 +488,45 @@ public class Search extends Application {
     	// Have the defaultSearch button be selected by default
     	defaultSearch.setSelected(true);
     	defaultSearch.setPadding(new Insets(10, 10, 10, 5));
+    	defaultSearch.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				defaultSearch.setSelected(true);
+				searchChoice = 1;
+			}
+    		
+		});
     	
     	RadioButton artistSearch = new RadioButton("Search By Artist Name");
     	artistSearch.setToggleGroup(optionButtons);
     	artistSearch.setPadding(new Insets(10, 10, 10, 5));
+    	artistSearch.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				artistSearch.setSelected(true);
+				searchChoice = 2;
+			}
+    		
+		});
     	
     	RadioButton alphabeticalSearch = new RadioButton("Sort Results Alphabetically");
     	alphabeticalSearch.setToggleGroup(optionButtons);
     	alphabeticalSearch.setPadding(new Insets(10, 10, 10, 5));
+    	alphabeticalSearch.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				alphabeticalSearch.setSelected(true);
+				searchChoice = 3;
+			}
+    		
+		});
     	
     	// Add the buttons to the optionsList
     	optionsList.getChildren().addAll(defaultSearch, artistSearch, alphabeticalSearch);
+    	
+    	if (defaultSearch.isSelected()) {
+    		searchChoice = 1;
+    	}
     	
     	
     	// Set the mainScene as the default scene to display on program start
