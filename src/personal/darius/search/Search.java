@@ -17,6 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -435,6 +437,26 @@ public class Search extends Application {
 		});
     	optionsButton.setPrefSize(100, 20);
     	
+    	Button returnButton = new Button("Return to Main Menu");
+    	returnButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.setScene(mainScene);
+			}
+		});
+    	returnButton.setPrefSize(200, 20);
+    	
+    	Button returnButton2 = new Button("Return to Main Menu");
+    	returnButton2.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.setScene(mainScene);
+			}
+		});
+    	returnButton2.setPrefSize(200, 20);
+    	
     	// MainLayout will be the main splash screen for the program
     	BorderPane mainLayout = new BorderPane();
     	
@@ -455,11 +477,60 @@ public class Search extends Application {
     	mainScene = new Scene(mainLayout, 500, 250);
     	
     	// ResultsLayout will display all of the songs that were released today
-    	StackPane resultsLayout = new StackPane();
+    	BorderPane resultsLayout = new BorderPane();
+    	
+    	VBox songResults = new VBox();
+    	
+    	HBox resultsBottom = new HBox();
+    	resultsBottom.setPadding(new Insets(15, 12, 15, 12));
+    	resultsBottom.setSpacing(10);
+    	resultsBottom.setStyle("-fx-background-color: #336699;");
+    	resultsBottom.setAlignment(Pos.BOTTOM_CENTER);
+    	resultsBottom.getChildren().add(returnButton2);
+    	
+    	resultsLayout.setBottom(resultsBottom);
+    	resultsLayout.setCenter(songResults);
+    	
+    	
     	resultsScene = new Scene(resultsLayout, 500, 250);
     	
-    	VBox optionsLayout = new VBox(20);
+    	
+    	BorderPane optionsLayout = new BorderPane();
+    	
+    	HBox optionsBottom = new HBox();
+    	optionsBottom.setPadding(new Insets(15, 12, 15, 12));
+    	optionsBottom.setSpacing(10);
+    	optionsBottom.setStyle("-fx-background-color: #336699;");
+    	optionsBottom.setAlignment(Pos.BOTTOM_CENTER);
+    	optionsBottom.getChildren().add(returnButton);
+    	
+    	VBox optionsList = new VBox();
+    	
+    	optionsLayout.setBottom(optionsBottom);
+    	optionsLayout.setLeft(optionsList);
+    	
     	optionsScene = new Scene(optionsLayout, 500, 250);
+    	
+    	// The options will be presented as a group of radio buttons
+    	ToggleGroup optionButtons = new ToggleGroup();
+    	
+    	RadioButton defaultSearch = new RadioButton("Default Search");
+    	defaultSearch.setToggleGroup(optionButtons);
+    	// Have the defaultSearch button be selected by default
+    	defaultSearch.setSelected(true);
+    	defaultSearch.setPadding(new Insets(10, 10, 10, 5));
+    	
+    	RadioButton artistSearch = new RadioButton("Search By Artist Name");
+    	artistSearch.setToggleGroup(optionButtons);
+    	artistSearch.setPadding(new Insets(10, 10, 10, 5));
+    	
+    	RadioButton alphabeticalSearch = new RadioButton("Sort Results Alphabetically");
+    	alphabeticalSearch.setToggleGroup(optionButtons);
+    	alphabeticalSearch.setPadding(new Insets(10, 10, 10, 5));
+    	
+    	// Add the buttons to the optionsList
+    	optionsList.getChildren().addAll(defaultSearch, artistSearch, alphabeticalSearch);
+    	
     	
     	// Set the mainScene as the default scene to display on program start
     	primaryStage.setScene(mainScene);
