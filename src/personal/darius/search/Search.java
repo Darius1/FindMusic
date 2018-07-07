@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -68,8 +69,10 @@ public class Search extends Application {
      * released by the artist for that day
      * @param  artist the artist's name
      * @param  website the website url
+     * @param primaryStage the main program window. Needed to create the invalid artist popup
      * 
-     * @return true if the artist released music on that date, false otherwise
+     * @return true if the artist has released music. False if an invalid artist is specified
+     * or an error loading the website occurs
      */
     public boolean searchForRelease(String artist, String website, Stage primaryStage) {
         try {
@@ -247,6 +250,9 @@ public class Search extends Application {
         ButtonType no = new ButtonType("No");
         
         alert.getButtonTypes().addAll(yes, no);
+        
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
  
         Optional<ButtonType> choice = alert.showAndWait();
         
@@ -258,15 +264,27 @@ public class Search extends Application {
     }
     
     private String createSearchByArtistNamePopup() {
-    	TextInputDialog dialog = new TextInputDialog();
-    	 
-    	dialog.setTitle("Artist Search");
-    	dialog.setHeaderText(null);
-    	dialog.setContentText("What artist would you like to search for?");
-    	 
-    	Optional<String> result = dialog.showAndWait();
-    	
-    	return result.get();
+    	try {
+			TextInputDialog dialog = new TextInputDialog();
+			 
+			dialog.setTitle("Artist Search");
+			dialog.setHeaderText(null);
+			dialog.setContentText("What artist would you like to search for?");
+			
+			DialogPane pane = dialog.getDialogPane();
+	        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+			 
+			Optional<String> result = dialog.showAndWait();
+			
+			
+	        
+			
+			return result.get();
+		} catch (NoSuchElementException e) {
+			// TODO Auto-generated catch block
+			
+		}
+		return null;
     }
     
     private void createInvalidArtistNamePopup(Stage primaryStage) {
@@ -282,6 +300,9 @@ public class Search extends Application {
         ButtonType ok = new ButtonType("Ok");
         
         alert.getButtonTypes().addAll(ok);
+        
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
  
         Optional<ButtonType> choice = alert.showAndWait();
         
@@ -303,12 +324,16 @@ public class Search extends Application {
         ButtonType ok = new ButtonType("Ok");
         
         alert.getButtonTypes().addAll(ok);
+        
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
  
         Optional<ButtonType> choice = alert.showAndWait();
         
         if (choice.get() == ok) {
         	primaryStage.setScene(mainScene);
-        } 
+        }
+        
     }
 
     /**
@@ -348,21 +373,27 @@ public class Search extends Application {
 					primaryStage.setScene(resultsScene);
 				} else if (searchChoice == 2) {
 					String artist = createSearchByArtistNamePopup();
-					// Will throw a NoSuchElement Exception if the user presses cancel when the
+					
+					// Will return null if the user presses cancel when the
 					// artist search popup appears
-					try {
-						searchForRelease(artist, "http://www.hotnewhiphop.com", primaryStage);
-					} catch (NoSuchElementException e) {
-						// Return to the main menu
+					if (artist == null) {
+						primaryStage.setScene(mainScene);
+					} else {
+						// Will return false if an empty string is passed in for an artist name
+						if (searchForRelease(artist, "http://www.hotnewhiphop.com", primaryStage)) {
+							if (searchedSongs.isEmpty()) {
+								// display a popup letting the user know their selected artist hasn't
+								// released anything today
+								createNoSongsByArtistPopup(artist, primaryStage);
+							} else {
+								primaryStage.setScene(resultsScene);
+							}
+						} else {
+							// Reset to the main menu after the error popup is displayed
+							primaryStage.setScene(mainScene);
+						}
 					}
 					
-					if (searchedSongs.isEmpty()) {
-						// display a popup letting the user no their selected artist hasn't
-						// released anything today
-						createNoSongsByArtistPopup(artist, primaryStage);
-					} else {
-						primaryStage.setScene(resultsScene);
-					}
 				} else if (searchChoice == 3) {
 					findNewSongs("http://www.hotnewhiphop.com");
 					printSongs();
@@ -468,7 +499,7 @@ public class Search extends Application {
     	optionsTop.setPadding(new Insets(15, 12, 15, 12));
     	optionsTop.setSpacing(10);
     	optionsTop.setStyle("-fx-background-color: #336699;");
-    	optionsTop.setAlignment(Pos.BOTTOM_CENTER);
+    	optionsTop.setAlignment(Pos.CENTER);
     	optionsTop.getChildren().add(optionsLabel);
     	
     	
@@ -527,6 +558,10 @@ public class Search extends Application {
     	if (defaultSearch.isSelected()) {
     		searchChoice = 1;
     	}
+    	
+    	mainScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+    	optionsScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+    	resultsScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
     	
     	
     	// Set the mainScene as the default scene to display on program start
