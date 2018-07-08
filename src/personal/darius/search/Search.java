@@ -249,6 +249,8 @@ public class Search extends Application {
         ButtonType yes = new ButtonType("Yes");
         ButtonType no = new ButtonType("No");
         
+        
+        
         alert.getButtonTypes().addAll(yes, no);
         
         DialogPane pane = alert.getDialogPane();
@@ -273,6 +275,7 @@ public class Search extends Application {
 			
 			DialogPane pane = dialog.getDialogPane();
 	        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+	        pane.setStyle("-fx-text-fill: #336699");
 			 
 			Optional<String> result = dialog.showAndWait();
 			
@@ -349,11 +352,17 @@ public class Search extends Application {
     public void start(Stage primaryStage) throws Exception {
     	primaryStage.setTitle("Find Music version 1.0");
   	
+    	String titleStyle = "-fx-text-fill: #336699;" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;";
+    	String headerStyle = "-fx-text-fill: #FFFFFF;" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;";
+    	
     	Label findMusicLabel = new Label("Find Music");
+    	findMusicLabel.setStyle(titleStyle);
     	
     	Label optionsLabel = new Label("Search Options");
+    	optionsLabel.setStyle(headerStyle);
     	
     	Label resultsLabel = new Label("Search Results");
+    	resultsLabel.setStyle(headerStyle);
     	
     	Button searchButton = new Button("Search");
     	searchButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -402,6 +411,7 @@ public class Search extends Application {
 			}
 		});
     	searchButton.setPrefSize(100, 20);
+    	searchButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: #336699;");
     	
     	Button optionsButton = new Button("Options");
     	optionsButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -412,6 +422,7 @@ public class Search extends Application {
 			}
 		});
     	optionsButton.setPrefSize(100, 20);
+    	optionsButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: #336699;");
     	
     	Button returnButton = new Button("Return to Main Menu");
     	returnButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -422,6 +433,7 @@ public class Search extends Application {
 			}
 		});
     	returnButton.setPrefSize(200, 20);
+    	returnButton.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
     	
     	Button returnButton2 = new Button("Return to Main Menu");
     	returnButton2.setOnAction(new EventHandler<ActionEvent>() {
@@ -432,6 +444,7 @@ public class Search extends Application {
 			}
 		});
     	returnButton2.setPrefSize(200, 20);
+    	returnButton2.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
     	
     	// MainLayout will be the main splash screen for the program
     	BorderPane mainLayout = new BorderPane();
@@ -468,14 +481,15 @@ public class Search extends Application {
     	HBox resultsBottom = new HBox();
     	resultsBottom.setPadding(new Insets(15, 12, 15, 12));
     	resultsBottom.setSpacing(10);
-    	resultsBottom.setStyle("-fx-background-color: #336699;");
+    	resultsBottom.setStyle("-fx-background-color: #FFFFFF;");
     	resultsBottom.setAlignment(Pos.BOTTOM_CENTER);
     	resultsBottom.getChildren().add(returnButton2);
     	
     	HBox resultsTop = new HBox();
-    	resultsTop.setPadding(new Insets(15, 12, 15, 12));
+    	resultsTop.setPadding(new Insets(15, 12, 12, 12));
     	resultsTop.setSpacing(10);
     	resultsTop.setAlignment(Pos.CENTER);
+    	resultsTop.setStyle("-fx-background-color: #336699;");
     	resultsTop.getChildren().add(resultsLabel);
     	
     	resultsLayout.setBottom(resultsBottom);
@@ -491,12 +505,12 @@ public class Search extends Application {
     	HBox optionsBottom = new HBox();
     	optionsBottom.setPadding(new Insets(15, 12, 15, 12));
     	optionsBottom.setSpacing(10);
-    	optionsBottom.setStyle("-fx-background-color: #336699;");
+    	optionsBottom.setStyle("-fx-background-color: #FFFFFF;");
     	optionsBottom.setAlignment(Pos.BOTTOM_CENTER);
     	optionsBottom.getChildren().add(returnButton);
     	
     	HBox optionsTop = new HBox();
-    	optionsTop.setPadding(new Insets(15, 12, 15, 12));
+    	optionsTop.setPadding(new Insets(15, 12, 12, 12));
     	optionsTop.setSpacing(10);
     	optionsTop.setStyle("-fx-background-color: #336699;");
     	optionsTop.setAlignment(Pos.CENTER);

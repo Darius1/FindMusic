@@ -49,7 +49,7 @@
 	-fx-text-control-title-color: rgb(130.0, 130.0, 130.0);
 	-fx-text-fill: -fx-text-base-color;
 	-dark: rgb(47.0, 52.0, 57.0);
-	-fx-background-color: -swatch-100;
+	-fx-background-color: #FFFFFF;
 	/*default font */
 	-fx-font-family: 'Roboto Medium';
 	-fx-font-size: 14.0px;
@@ -140,13 +140,14 @@
 }
 
 .toggle-button, .button {
-	-fx-text-fill: -fx-text-button-normal;
+	-fx-text-fill: #FFFFFF;
 	-fx-font-family: 'Roboto';
 	-fx-font-weight: bold;
 	-fx-background-insets: 0.0;
 	-fx-background-radius: 4.0;
 	-fx-padding: 0.7em;
 	-fx-alignment: CENTER;
+	-fx-background-color: #336699;
 }
 
 .button-raised .button .text, .button-flat .button .text {
@@ -423,9 +424,9 @@
  *                                                                             *
  ******************************************************************************/
 .label {
-	-fx-text-fill: #FFFFFF;
-	-fx-font-size: 20px;
-    -fx-font-weight: bold;
+	-fx-text-fill: #000000;
+	-fx-font-size: 15px;
+    -fx-font-weight: normal;
 }
 
 .label:disabled {
@@ -517,7 +518,7 @@
 }
 
 .radio-button .text {
-	-fx-fill: -fx-text-base-color;
+	-fx-fill: #336699;
 }
 
 .radio-button>.radio, .radio-button>.radio.unfocused, .radio-button:disabled>.radio,
@@ -531,15 +532,15 @@
 }
 
 .radio-button:focused>.radio {
-	-fx-background-color: -swatch-100;
+	-fx-background-color: #336699;
 }
 
 .radio-button:focused:armed>.radio {
-	-fx-background-color: -swatch-100;
+	-fx-background-color: #336699;
 }
 
 .radio-button:selected>.radio>.dot {
-	-fx-background-color: -swatch-500;
+	-fx-background-color: #336699;
 	-fx-background-insets: 0;
 }
 
@@ -564,7 +565,7 @@
 }
 
 .scroll-bar:vertical>.thumb, .scroll-bar:horizontal>.thumb {
-	-fx-background-color: -swatch-grey;
+	-fx-background-color: #336699;
 	-fx-background-insets: 0.0;
 	-fx-background-radius: 4.0;
 }
