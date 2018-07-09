@@ -77,6 +77,10 @@
      * text; selected items in menus, lists, trees, and tables; progress bars */
 	-fx-accent: -swatch-400;
 	-fx-dark-text-color: white;
+	/*
+	Theme color
+	*/
+	-theme-color: #f08080;
 }
 
 /*******************************************************************************
@@ -147,7 +151,7 @@
 	-fx-background-radius: 4.0;
 	-fx-padding: 0.7em;
 	-fx-alignment: CENTER;
-	-fx-background-color: #336699;
+	-fx-background-color: -theme-color;
 }
 
 .button-raised .button .text, .button-flat .button .text {
@@ -155,24 +159,23 @@
 }
 
 .button:default {
-	-fx-background-color: -swatch-500;
+	-fx-background-color: -theme-color;
 	-fx-text-fill: -fx-text-button-colored;
 }
 
-/* .toggle-button:focused, .button:focused, .button:default:focused {
-	-fx-background-color: -swatch-light-grey;
+.toggle-button:focused, .button:focused, .button:default:focused {
+	-fx-background-color: -theme-color;
 }
 
 .toggle-button:focused:selected {
-	-fx-background-color: derive(-swatch-500, 50.0%),
-		derive(-swatch-500, -20.0%);
+	-fx-background-color: -theme-color;
 	-fx-background-insets: 0.0, 0.2em;
 	-fx-text-fill: -fx-text-button-colored;
-} */
+}
 
 .toggle-button:armed, .toggle-button:selected, .button:armed, .button:default:armed
 	{
-	-fx-background-color: -swatch-grey;
+	-fx-background-color: -theme-color;
 	-fx-text-fill: -fx-text-button-colored;
 }
 
@@ -201,18 +204,19 @@
 	-fx-border-width: 0 0 2 0;
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
+	-fx-font-size: 12px;
 }
 
 .combo-box:focused, .choice-box:focused {
-	-fx-border-color: -swatch-500;
+	-fx-border-color: -theme-color;
 }
 
 .combo-box-base>.label, .choice-box>.label {
-	-fx-padding: 0.7em 0.7em 0.7em 0em;
+	-fx-padding: 0.7em 0.7em 0em 0em;
 }
 
 .combo-box-base>.arrow-button, .choice-box>.open-button {
-	-fx-padding: 1.2em 0.7em 1.2em 0.5em;
+	-fx-padding: 1.2em 0.7em 0em 0.5em;
 	-fx-background-radius: 0.0 2.0 2.0 0.0;
 }
 
@@ -309,7 +313,7 @@
  *                                                                             *
  ******************************************************************************/
 .combo-box .list-cell {
-	-fx-padding: 0.7em 0.7em 0.7em 0em;
+	-fx-padding: 0.7em 0.7em -0.7em 0em;
 }
 
 .popup-overlay {
@@ -518,7 +522,7 @@
 }
 
 .radio-button .text {
-	-fx-fill: #336699;
+	-fx-fill: -theme-color;
 }
 
 .radio-button>.radio, .radio-button>.radio.unfocused, .radio-button:disabled>.radio,
@@ -532,15 +536,15 @@
 }
 
 .radio-button:focused>.radio {
-	-fx-background-color: #336699;
+	-fx-background-color: #FFFFFF;
 }
 
 .radio-button:focused:armed>.radio {
-	-fx-background-color: #336699;
+	-fx-background-color: -theme-color;
 }
 
 .radio-button:selected>.radio>.dot {
-	-fx-background-color: #336699;
+	-fx-background-color: -theme-color;
 	-fx-background-insets: 0;
 }
 
@@ -565,7 +569,7 @@
 }
 
 .scroll-bar:vertical>.thumb, .scroll-bar:horizontal>.thumb {
-	-fx-background-color: #336699;
+	-fx-background-color: -theme-color;
 	-fx-background-insets: 0.0;
 	-fx-background-radius: 4.0;
 }

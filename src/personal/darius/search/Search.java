@@ -4,6 +4,8 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -62,7 +65,27 @@ public class Search extends Application {
     
     ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
     
-    int searchChoice;
+    private int searchChoice;
+    
+    private static final String RED = "#cc0000";
+    
+    private static final String BLUE = "#336699";
+    
+    private static final String LIGHT_BLUE = "#87cefa";
+    
+    private static final String GREEN = "#00cd66";
+    
+    private static final String ORANGE = "#ff8c00";
+    
+    private static final String PINK = "#f08080";
+    
+    private static final String BLACK = "#000000";
+    
+    private static final String PURPLE = "#9370db";
+    
+    private static final String GRAY = "#999999";
+    
+    private String themeColor = "Blue";
 
     /**
      * Searches a website using an artist's name and current date as parameters to find new music
@@ -254,7 +277,11 @@ public class Search extends Application {
         alert.getButtonTypes().addAll(yes, no);
         
         DialogPane pane = alert.getDialogPane();
-        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+        if (themeColor.equals("Light Blue")) {
+			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+		} else {
+			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+		}
  
         Optional<ButtonType> choice = alert.showAndWait();
         
@@ -274,13 +301,16 @@ public class Search extends Application {
 			dialog.setContentText("What artist would you like to search for?");
 			
 			DialogPane pane = dialog.getDialogPane();
-	        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
-	        pane.setStyle("-fx-text-fill: #336699");
+			if (themeColor.equals("Light Blue")) {
+				pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
+			} else {
+				pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
+			}
+	        
 			 
 			Optional<String> result = dialog.showAndWait();
-			
-			
-	        
 			
 			return result.get();
 		} catch (NoSuchElementException e) {
@@ -305,7 +335,11 @@ public class Search extends Application {
         alert.getButtonTypes().addAll(ok);
         
         DialogPane pane = alert.getDialogPane();
-        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+        if (themeColor.equals("Light Blue")) {
+			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+		} else {
+			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+		}
  
         Optional<ButtonType> choice = alert.showAndWait();
         
@@ -329,7 +363,11 @@ public class Search extends Application {
         alert.getButtonTypes().addAll(ok);
         
         DialogPane pane = alert.getDialogPane();
-        pane.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+        if (themeColor.equals("Light Blue")) {
+			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+		} else {
+			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+		}
  
         Optional<ButtonType> choice = alert.showAndWait();
         
@@ -337,6 +375,28 @@ public class Search extends Application {
         	primaryStage.setScene(mainScene);
         }
         
+    }
+    
+    private String changeTheme(String color) {
+    	if (color.equals("Blue")) {
+    		return BLUE;
+    	} else if (color.equals("Light Blue")) {
+    		return LIGHT_BLUE;
+    	} else if (color.equals("Red")) {
+    		return RED;
+    	} else if (color.equals("Green")) {
+    		return GREEN;
+    	} else if (color.equals("Orange")) {
+    		return ORANGE;
+    	} else if (color.equals("Pink")) {
+    		return PINK;
+    	} else if (color.equals("Black")) {
+    		return BLACK;
+    	} else if (color.equals("Purple")) {
+    		return PURPLE;
+    	} else {
+    		return GRAY;
+    	}
     }
 
     /**
@@ -354,15 +414,20 @@ public class Search extends Application {
   	
     	String titleStyle = "-fx-text-fill: #336699;" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;";
     	String headerStyle = "-fx-text-fill: #FFFFFF;" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;";
+    	String themeStyle = "-fx-text-fill: #336699;" + "-fx-font-size: 14px;" + "-fx-font-weight: normal;";
     	
     	Label findMusicLabel = new Label("Find Music");
-    	findMusicLabel.setStyle(titleStyle);
+    	findMusicLabel.setStyle("-fx-text-fill: #336699;" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;");
     	
     	Label optionsLabel = new Label("Search Options");
-    	optionsLabel.setStyle(headerStyle);
+    	optionsLabel.setStyle("-fx-text-fill: #FFFFFF;" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;");
     	
     	Label resultsLabel = new Label("Search Results");
-    	resultsLabel.setStyle(headerStyle);
+    	resultsLabel.setStyle("-fx-text-fill: #FFFFFF;" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;");
+    	
+    	Label themeLabel = new Label("Theme: ");
+    	themeLabel.setStyle("-fx-text-fill: #336699;" + "-fx-font-size: 14px;" + "-fx-font-weight: normal;");
+    	themeLabel.setPadding(new Insets(18, 10, 0, 12));
     	
     	Button searchButton = new Button("Search");
     	searchButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -463,7 +528,7 @@ public class Search extends Application {
     	mainLayout.setBottom(bottom);
     	mainLayout.setCenter(center);
     	
-    	mainScene = new Scene(mainLayout, 500, 250);
+    	mainScene = new Scene(mainLayout, 600, 310);
     	
     	// ResultsLayout will display all of the songs that were released today
     	BorderPane resultsLayout = new BorderPane();
@@ -497,7 +562,7 @@ public class Search extends Application {
     	resultsLayout.setTop(resultsTop);
     	
     	
-    	resultsScene = new Scene(resultsLayout, 500, 250);
+    	resultsScene = new Scene(resultsLayout, 600, 310);
     	
     	
     	BorderPane optionsLayout = new BorderPane();
@@ -518,12 +583,13 @@ public class Search extends Application {
     	
     	
     	VBox optionsList = new VBox();
+    	HBox themeBox = new HBox();
     	
     	optionsLayout.setBottom(optionsBottom);
     	optionsLayout.setLeft(optionsList);
     	optionsLayout.setTop(optionsTop);
     	
-    	optionsScene = new Scene(optionsLayout, 500, 250);
+    	optionsScene = new Scene(optionsLayout, 600, 310);
     	
     	// The options will be presented as a group of radio buttons
     	ToggleGroup optionButtons = new ToggleGroup();
@@ -566,16 +632,51 @@ public class Search extends Application {
     		
 		});
     	
+    	ObservableList<String> options = FXCollections.observableArrayList("Blue", "Light Blue", "Red", "Green", "Orange", "Pink", "Black", "Purple", "Gray");
+    	ComboBox<String> comboBox = new ComboBox<String>(options);
+    	comboBox.setVisibleRowCount(2);
+    	
+    	
+    	
+    	themeBox.getChildren().addAll(themeLabel, comboBox);
+    	
     	// Add the buttons to the optionsList
-    	optionsList.getChildren().addAll(defaultSearch, artistSearch, alphabeticalSearch);
+    	optionsList.getChildren().addAll(defaultSearch, artistSearch, alphabeticalSearch, themeBox);
     	
     	if (defaultSearch.isSelected()) {
     		searchChoice = 1;
     	}
     	
-    	mainScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
-    	optionsScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
-    	resultsScene.getStylesheets().add(Search.class.getResource("material.css").toExternalForm());
+    	comboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				returnButton.setStyle("-fx-background-color: " + changeTheme(newValue) + ";" + "-fx-text-fill: #FFFFFF;");
+				returnButton2.setStyle("-fx-background-color: " + changeTheme(newValue) + ";" + "-fx-text-fill: #FFFFFF;");
+				optionsTop.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
+				resultsTop.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
+				bottom.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
+				searchButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: " + changeTheme(newValue) + ";");
+				optionsButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: " + changeTheme(newValue) + ";");
+				findMusicLabel.setStyle("-fx-text-fill: " + changeTheme(newValue) + ";" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;");
+				themeLabel.setStyle("-fx-text-fill: " + changeTheme(newValue) + ";" + "-fx-font-size: 14px;" + "-fx-font-weight: normal;");
+				
+				if (newValue.equals("Light Blue")) {
+					mainScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+			    	optionsScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+			    	resultsScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+				} else {
+					mainScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
+			    	optionsScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
+			    	resultsScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
+				}
+				themeColor = newValue;
+			}
+		});
+    	
+    	mainScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
+    	optionsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
+    	resultsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
     	
     	
     	// Set the mainScene as the default scene to display on program start
