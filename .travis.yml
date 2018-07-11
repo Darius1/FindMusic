@@ -4,4 +4,4 @@ jdk:
 
 script: ant build
 before install:
-  - sudo apt-get install -y commons-cli-java
+  - apt-get install commons-cli-java
