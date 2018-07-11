@@ -1,5 +1,5 @@
 # FindMusic
-The find music program allows a user to specify an artist and website of their choice and the program will scrape the website and return any songs the specified artist appears on for that day. The user can also specify a certain date to search for songs. Currently the only website supported is http://http://www.hotnewhiphop.com/ and only songs from the current day are searched. Eventually I'd like for the program to act as a text only way of searching for music that users that are low on data or have slow internet could use to find music for only the artists they care about.
+The Find Music program allows a user to quickly find music that has been released during the past 48 hours. There are 3 search options: default, search by artist name, and a search that orders the results alphabetically. Currently the only website supported is http://www.hotnewhiphop.com/.
 
 ## Future Ideas
 * Add links to the music that the user can use to go directly to the song to stream it
