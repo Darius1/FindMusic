@@ -11,7 +11,6 @@ import org.jsoup.select.Elements;
 
 import personal.darius.data.Song;
 import personal.darius.dataStructures.ArrayList;
-import personal.darius.database.SongStorage;
 import personal.darius.sort.Sorter;
 
 import java.io.*;
@@ -24,10 +23,12 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
- * This class will handle all of the search functionality in the FindMusic program
+ * This class will handle all of the search functionality in the FindMusic program and will
+ * present information as a CLI
+ * 
  * @author Darius McFarland
  */
-public class Search {
+public class SearchCLI {
 	
     /** Holds the website url that will be searched */
     private String website;
@@ -37,27 +38,13 @@ public class Search {
     
     /** Reads the arguments supplied by the user on the command line */
     private CommandLine cmd;
-
-
-//    /**
-//     * Search object constructor that takes in the artist name as a parameter
-//     * 
-//     * @param artist the artist's name
-//     */
-//    public Search(String artist) {
-//        this.artist = artist;
-//        website = "";
-//        song = "";
-//     // TODO Update to use the new array list class
-////        sortedSongs = new SortedArrayList<String>();
-//    }
     
     /**
      * Search constructor that will be used for the CLI
      *
      * @param args the command line arguments the user supplies
      */
-    public Search(String[] args) {
+    public SearchCLI(String[] args) {
     	cmd = null;
     	sortedSongs = new ArrayList<Song>();
     	if (setupCLI(args)) {
@@ -207,9 +194,9 @@ public class Search {
 			}
 			
 			// add the songs to the database
-			System.out.println("Adding to database!");
-			SongStorage database = new SongStorage();
-			database.addSongsToDatabase(sortedSongs);
+//			System.out.println("Adding to database!");
+//			SongStorage database = new SongStorage();
+//			database.addSongsToDatabase(sortedSongs);
 			
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
@@ -378,10 +365,10 @@ public class Search {
     }
 
     /**
-     * Tests the functionality of the Search class
+     * Starting point for the program
      * @param args not used
      */
     public static void main(String[] args) {
-    	new Search(args);
+    	new SearchCLI(args);
     }
 }
