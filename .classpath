@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="junit-4.12.jar"/>
 	<classpathentry kind="lib" path="hamcrest-core-1.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Darius McFarland/Documents/FindMusic/commons-cli-1.4.jar"/>
+	<classpathentry kind="lib" path="commons-cli-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
