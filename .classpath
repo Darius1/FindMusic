@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="jsoup-1.10.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Darius McFarland/Downloads/commons-cli-1.4-bin/commons-cli-1.4"/>
 	<classpathentry kind="lib" path="C:/Users/Darius McFarland/Documents/FindMusic/mysql-connector-java-8.0.11/mysql-connector-java-8.0.11.jar"/>
 	<classpathentry kind="lib" path="commons-cli-1.4.jar"/>
 	<classpathentry kind="lib" path="junit-4.12.jar"/>
