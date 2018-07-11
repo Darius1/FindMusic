@@ -55,36 +55,52 @@ public class Search extends Application {
     /** Holds all of the scraped songs and sorts them alphabetically */
     private ArrayList<Song> sortedSongs;
     
+    /** The main menu of the GUI */
     Scene mainScene;
     
+    /** The results screen */
     Scene resultsScene;
     
+    /** The options screen */
     Scene optionsScene;
     
+    /** The scrollable list of songs on the results screen */
     ListView<Song> songList;
     
+    /** Holds the songs that are scraped so that they can be added to the ListView dynamically */
     ObservableList<Song> searchedSongs = FXCollections.observableArrayList();
     
+    /** Keeps track of the search option the user chooses */
     private int searchChoice;
     
+    /** Hex code for Wolfpack Red */
     private static final String RED = "#cc0000";
     
+    /** Hex code for Blue */
     private static final String BLUE = "#336699";
     
+    /** Hex code for Light Blue */
     private static final String LIGHT_BLUE = "#87cefa";
     
+    /** Hex code for Green */
     private static final String GREEN = "#00cd66";
     
+    /** Hex code for Orange */
     private static final String ORANGE = "#ff8c00";
     
+    /** Hex code for Pink */
     private static final String PINK = "#f08080";
     
+    /** Hex code for Black */
     private static final String BLACK = "#000000";
     
+    /** Hex code for Purple */
     private static final String PURPLE = "#9370db";
     
+    /** Hex code for Gray */
     private static final String GRAY = "#999999";
     
+    /** Stores the current theme color as a string for easy CSS switching */
     private String themeColor = "Blue";
 
     /**
@@ -272,11 +288,11 @@ public class Search extends Application {
         ButtonType yes = new ButtonType("Yes");
         ButtonType no = new ButtonType("No");
         
-        
-        
         alert.getButtonTypes().addAll(yes, no);
         
         DialogPane pane = alert.getDialogPane();
+        
+        // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
 			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
@@ -292,6 +308,11 @@ public class Search extends Application {
         }
     }
     
+    /**
+     * Creates a popup box with a text field for the user to specify an artist to search for
+     *
+     * @return a String containing the artist's name
+     */
     private String createSearchByArtistNamePopup() {
     	try {
 			TextInputDialog dialog = new TextInputDialog();
@@ -301,6 +322,8 @@ public class Search extends Application {
 			dialog.setContentText("What artist would you like to search for?");
 			
 			DialogPane pane = dialog.getDialogPane();
+			
+			// Styles the alert box with the current theme
 			if (themeColor.equals("Light Blue")) {
 				pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
 		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
@@ -308,18 +331,21 @@ public class Search extends Application {
 				pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
 		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
 			}
-	        
-			 
+	        		 
 			Optional<String> result = dialog.showAndWait();
 			
 			return result.get();
 		} catch (NoSuchElementException e) {
-			// TODO Auto-generated catch block
-			
+			// Thrown whenever the user clicks cancel without entering an artist name
 		}
 		return null;
     }
     
+    /**
+     * Creates a popup letting the user know that they entered an invalid name for an artist
+     *
+     * @param primaryStage the main window of the program
+     */
     private void createInvalidArtistNamePopup(Stage primaryStage) {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle(null);
@@ -335,6 +361,8 @@ public class Search extends Application {
         alert.getButtonTypes().addAll(ok);
         
         DialogPane pane = alert.getDialogPane();
+        
+        // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
 			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
@@ -348,6 +376,13 @@ public class Search extends Application {
         } 
     }
     
+    /**
+     * Creates a popup letting the user know that the artist they searched for hasn't released
+     * any music in the past 48 hours
+     *
+     * @param artist the artist being searched for
+     * @param primaryStage the main window of the program
+     */
     private void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(null);
@@ -363,6 +398,8 @@ public class Search extends Application {
         alert.getButtonTypes().addAll(ok);
         
         DialogPane pane = alert.getDialogPane();
+        
+        // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
 			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
@@ -377,6 +414,12 @@ public class Search extends Application {
         
     }
     
+    /**
+     * Takes the passed in color string and returns that color's hex code
+     *
+     * @param color the theme color the user has selected
+     * @return the hex code associated with the color specified by the user
+     */
     private String changeTheme(String color) {
     	if (color.equals("Blue")) {
     		return BLUE;
@@ -408,13 +451,14 @@ public class Search extends Application {
     	launch(args);
     }
     
+    /**
+     * The starting point for the GUI
+     * 
+     * @param primaryStage the main window of the program
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
     	primaryStage.setTitle("Find Music version 1.0");
-  	
-    	String titleStyle = "-fx-text-fill: #336699;" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;";
-    	String headerStyle = "-fx-text-fill: #FFFFFF;" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;";
-    	String themeStyle = "-fx-text-fill: #336699;" + "-fx-font-size: 14px;" + "-fx-font-weight: normal;";
     	
     	Label findMusicLabel = new Label("Find Music");
     	findMusicLabel.setStyle("-fx-text-fill: #336699;" + "-fx-font-size: 25px;" + "-fx-font-weight: bold;");
@@ -432,6 +476,11 @@ public class Search extends Application {
     	Button searchButton = new Button("Search");
     	searchButton.setOnAction(new EventHandler<ActionEvent>() {
 
+    		/**
+    		 * Performs the search that the user has specified
+    		 *
+    		 * @param event the action that triggered this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				sortedSongs = new ArrayList<Song>();
@@ -442,6 +491,7 @@ public class Search extends Application {
 					searchedSongs.clear();
 				}
 				
+				// Default search
 				if (searchChoice == 1) {
 					findNewSongs("http://www.hotnewhiphop.com");
 					primaryStage.setScene(resultsScene);
@@ -481,6 +531,11 @@ public class Search extends Application {
     	Button optionsButton = new Button("Options");
     	optionsButton.setOnAction(new EventHandler<ActionEvent>() {
 
+    		/**
+    		 * Switches the screen from the main menu to the options menu
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				primaryStage.setScene(optionsScene);
@@ -492,6 +547,11 @@ public class Search extends Application {
     	Button returnButton = new Button("Return to Main Menu");
     	returnButton.setOnAction(new EventHandler<ActionEvent>() {
 
+    		/**
+    		 * Switches the screen from the options menu to the main menu
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				primaryStage.setScene(mainScene);
@@ -500,16 +560,21 @@ public class Search extends Application {
     	returnButton.setPrefSize(200, 20);
     	returnButton.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
     	
-    	Button returnButton2 = new Button("Return to Main Menu");
-    	returnButton2.setOnAction(new EventHandler<ActionEvent>() {
+    	Button resultsReturn = new Button("Return to Main Menu");
+    	resultsReturn.setOnAction(new EventHandler<ActionEvent>() {
 
+    		/**
+    		 * Switches the screen from the results menu to the main menu
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				primaryStage.setScene(mainScene);
 			}
 		});
-    	returnButton2.setPrefSize(200, 20);
-    	returnButton2.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
+    	resultsReturn.setPrefSize(200, 20);
+    	resultsReturn.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
     	
     	// MainLayout will be the main splash screen for the program
     	BorderPane mainLayout = new BorderPane();
@@ -538,8 +603,6 @@ public class Search extends Application {
     	// Adds the search results to the list view
     	songList.setItems(searchedSongs);
     	
-    	
-    	
     	VBox songResults = new VBox();
     	songResults.getChildren().add(songList);
     	
@@ -548,7 +611,7 @@ public class Search extends Application {
     	resultsBottom.setSpacing(10);
     	resultsBottom.setStyle("-fx-background-color: #FFFFFF;");
     	resultsBottom.setAlignment(Pos.BOTTOM_CENTER);
-    	resultsBottom.getChildren().add(returnButton2);
+    	resultsBottom.getChildren().add(resultsReturn);
     	
     	HBox resultsTop = new HBox();
     	resultsTop.setPadding(new Insets(15, 12, 12, 12));
@@ -561,10 +624,9 @@ public class Search extends Application {
     	resultsLayout.setCenter(songResults);
     	resultsLayout.setTop(resultsTop);
     	
-    	
     	resultsScene = new Scene(resultsLayout, 600, 310);
     	
-    	
+    	// OptionsLayout displays all of the search options and the theme selector
     	BorderPane optionsLayout = new BorderPane();
     	
     	HBox optionsBottom = new HBox();
@@ -580,7 +642,6 @@ public class Search extends Application {
     	optionsTop.setStyle("-fx-background-color: #336699;");
     	optionsTop.setAlignment(Pos.CENTER);
     	optionsTop.getChildren().add(optionsLabel);
-    	
     	
     	VBox optionsList = new VBox();
     	HBox themeBox = new HBox();
@@ -600,6 +661,12 @@ public class Search extends Application {
     	defaultSearch.setSelected(true);
     	defaultSearch.setPadding(new Insets(10, 10, 10, 5));
     	defaultSearch.setOnAction(new EventHandler<ActionEvent>() {
+    		
+    		/**
+    		 * Sets the default search option the first radio button to be automatically selected
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				defaultSearch.setSelected(true);
@@ -612,6 +679,11 @@ public class Search extends Application {
     	artistSearch.setToggleGroup(optionButtons);
     	artistSearch.setPadding(new Insets(10, 10, 10, 5));
     	artistSearch.setOnAction(new EventHandler<ActionEvent>() {
+    		/**
+    		 * Sets the search option to be the artist search
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				artistSearch.setSelected(true);
@@ -624,6 +696,12 @@ public class Search extends Application {
     	alphabeticalSearch.setToggleGroup(optionButtons);
     	alphabeticalSearch.setPadding(new Insets(10, 10, 10, 5));
     	alphabeticalSearch.setOnAction(new EventHandler<ActionEvent>() {
+    		
+    		/**
+    		 * Sets the search option to be the alphabetical search
+    		 *
+    		 * @param event the event that triggers this method
+    		 */
 			@Override
 			public void handle(ActionEvent event) {
 				alphabeticalSearch.setSelected(true);
@@ -632,27 +710,35 @@ public class Search extends Application {
     		
 		});
     	
+    	// The list of theme color choices
     	ObservableList<String> options = FXCollections.observableArrayList("Blue", "Light Blue", "Red", "Green", "Orange", "Pink", "Black", "Purple", "Gray");
     	ComboBox<String> comboBox = new ComboBox<String>(options);
     	comboBox.setVisibleRowCount(2);
-    	
-    	
-    	
+
     	themeBox.getChildren().addAll(themeLabel, comboBox);
     	
     	// Add the buttons to the optionsList
     	optionsList.getChildren().addAll(defaultSearch, artistSearch, alphabeticalSearch, themeBox);
     	
+    	// Sets the default search option
     	if (defaultSearch.isSelected()) {
     		searchChoice = 1;
     	}
     	
+    	// Handles switching the theme CSS
     	comboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
+    		/**
+    		 * Changes the CSS for the program to the appropriate sheet for the selected color
+    		 *
+    		 * @param observable The list of choices
+    		 * @param oldValue the previous theme color choice
+    		 * @param newValue the new theme color choice
+    		 */
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				returnButton.setStyle("-fx-background-color: " + changeTheme(newValue) + ";" + "-fx-text-fill: #FFFFFF;");
-				returnButton2.setStyle("-fx-background-color: " + changeTheme(newValue) + ";" + "-fx-text-fill: #FFFFFF;");
+				resultsReturn.setStyle("-fx-background-color: " + changeTheme(newValue) + ";" + "-fx-text-fill: #FFFFFF;");
 				optionsTop.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
 				resultsTop.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
 				bottom.setStyle("-fx-background-color: " + changeTheme(newValue) + ";");
@@ -674,6 +760,7 @@ public class Search extends Application {
 			}
 		});
     	
+    	// Set the CSS of the program to use Blue as the default color
     	mainScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
     	optionsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
     	resultsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
