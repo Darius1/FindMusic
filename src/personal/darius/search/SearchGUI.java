@@ -44,10 +44,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * This class will handle all of the search functionality in the FindMusic program
+ * This class will handle all of the search functionality in the FindMusic program and will display
+ * a GUI
+ * 
  * @author Darius McFarland
  */
-public class Search extends Application {
+public class SearchGUI extends Application {
 	
     /** Holds the website url that will be searched */
     private String website;
@@ -294,9 +296,9 @@ public class Search extends Application {
         
         // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
-			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
-			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("material" + themeColor + ".css").toExternalForm());
 		}
  
         Optional<ButtonType> choice = alert.showAndWait();
@@ -325,10 +327,10 @@ public class Search extends Application {
 			
 			// Styles the alert box with the current theme
 			if (themeColor.equals("Light Blue")) {
-				pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+				pane.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
 		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
 			} else {
-				pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+				pane.getStylesheets().add(SearchGUI.class.getResource("material" + themeColor + ".css").toExternalForm());
 		        pane.setStyle("-fx-text-fill: " + changeTheme(themeColor) + ";");
 			}
 	        		 
@@ -364,9 +366,9 @@ public class Search extends Application {
         
         // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
-			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
-			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("material" + themeColor + ".css").toExternalForm());
 		}
  
         Optional<ButtonType> choice = alert.showAndWait();
@@ -401,9 +403,9 @@ public class Search extends Application {
         
         // Styles the alert box with the current theme
         if (themeColor.equals("Light Blue")) {
-			pane.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
 		} else {
-			pane.getStylesheets().add(Search.class.getResource("material" + themeColor + ".css").toExternalForm());
+			pane.getStylesheets().add(SearchGUI.class.getResource("material" + themeColor + ".css").toExternalForm());
 		}
  
         Optional<ButtonType> choice = alert.showAndWait();
@@ -748,22 +750,22 @@ public class Search extends Application {
 				themeLabel.setStyle("-fx-text-fill: " + changeTheme(newValue) + ";" + "-fx-font-size: 14px;" + "-fx-font-weight: normal;");
 				
 				if (newValue.equals("Light Blue")) {
-					mainScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
-			    	optionsScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
-			    	resultsScene.getStylesheets().add(Search.class.getResource("materialLightBlue.css").toExternalForm());
+					mainScene.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
+			    	optionsScene.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
+			    	resultsScene.getStylesheets().add(SearchGUI.class.getResource("materialLightBlue.css").toExternalForm());
 				} else {
-					mainScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
-			    	optionsScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
-			    	resultsScene.getStylesheets().add(Search.class.getResource("material" + newValue + ".css").toExternalForm());
+					mainScene.getStylesheets().add(SearchGUI.class.getResource("material" + newValue + ".css").toExternalForm());
+			    	optionsScene.getStylesheets().add(SearchGUI.class.getResource("material" + newValue + ".css").toExternalForm());
+			    	resultsScene.getStylesheets().add(SearchGUI.class.getResource("material" + newValue + ".css").toExternalForm());
 				}
 				themeColor = newValue;
 			}
 		});
     	
     	// Set the CSS of the program to use Blue as the default color
-    	mainScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
-    	optionsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
-    	resultsScene.getStylesheets().add(Search.class.getResource("materialBlue.css").toExternalForm());
+    	mainScene.getStylesheets().add(SearchGUI.class.getResource("materialBlue.css").toExternalForm());
+    	optionsScene.getStylesheets().add(SearchGUI.class.getResource("materialBlue.css").toExternalForm());
+    	resultsScene.getStylesheets().add(SearchGUI.class.getResource("materialBlue.css").toExternalForm());
     	
     	
     	// Set the mainScene as the default scene to display on program start
