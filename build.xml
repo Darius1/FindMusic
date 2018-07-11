@@ -19,6 +19,9 @@
         <pathelement location="../../Downloads/commons-cli-1.4-bin/commons-cli-1.4/commons-cli-1.4.jar"/>
         <pathelement location="../../Downloads/commons-cli-1.4-bin/commons-cli-1.4"/>
         <pathelement location="mysql-connector-java-8.0.11/mysql-connector-java-8.0.11.jar"/>
+        <pathelement location="commons-cli-1.4.jar"/>
+        <pathelement location="junit-4.12.jar"/>
+        <pathelement location="hamcrest-core-1.3.jar"/>
         <path refid="JUnit 4.libraryclasspath"/>
     </path>
     <target name="init">
