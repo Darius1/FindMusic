@@ -1,4 +1,10 @@
-# FindMusic
+<h1 align = "center"> FindMusic </h1>    
+<div align = "center">
+ 
+![Crates.io](https://img.shields.io/crates/l/rustc-serialize.svg)
+![GitHub release](https://img.shields.io/badge/release-v1.0-red.svg)
+</div>
+ 
 The Find Music program allows a user to quickly find music that has been released during the past 48 hours. There are 3 search options: default, search by artist name, and a search that orders the results alphabetically. Currently the only website supported is http://www.hotnewhiphop.com/.
 
 The program uses the JSoup Java web scraping library to gather the song information from the website. The GUI for the program was created using JavaFX, and I plan on using MySQL to store the songs the user searches for in a database.
