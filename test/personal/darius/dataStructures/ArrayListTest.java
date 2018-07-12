@@ -32,6 +32,14 @@ public class ArrayListTest {
 		testList.insert("good");
 		testList.insert("Github?");
 		assertEquals(3, testList.size());
+		
+		// Add another 30 items to test array resizing
+		
+		for (int i = 0; i < 30; i++) {
+			testList.insert("a");
+		}
+		
+		assertEquals(33, testList.size());
 	}
 
 	/**

@@ -44,6 +44,18 @@ public class SongTest {
 		Song testSong = new Song(ARTIST, SONGTITLE);
 		assertEquals("Star 67", testSong.getTitle());
 	}
+	
+	/**
+	 * Tests the getReleaseDate() and setReleaseDate() methods
+	 */
+	@Test
+	public void testReleaseDateMethods() {
+		Song testSong = new Song(ARTIST, SONGTITLE);
+		
+		testSong.setReleaseDate("February 13, 2015");
+		
+		assertEquals("February 13, 2015", testSong.getReleaseDate());
+	}
 
 	/**
 	 * Tests the toString() method

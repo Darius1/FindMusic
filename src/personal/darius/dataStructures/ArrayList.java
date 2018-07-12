@@ -43,16 +43,6 @@ public class ArrayList<E extends Comparable<E>> {
 	}
 
 	/**
-	 * Looks up the item specified by the index
-	 * 
-	 * @param index the location in the list to search for
-	 * @return the item at that index
-	 */
-	public E lookUp(int index) {		
-		return binarySearch(list, index, 0, size);
-	}
-
-	/**
 	 * Getter method for the size instance variable
 	 *
 	 * @return the size of the list
@@ -74,35 +64,6 @@ public class ArrayList<E extends Comparable<E>> {
 		
 		for (int i = 0; i < temp.length; i++) {
 			list[i] = temp[i];
-		}
-	}
-
-	/**
-	 * Performs a binary search to find the item at the index
-	 *
-	 * 
-	 * @param list the list array
-	 * @param index the location in the list to look for
-	 * @param low the low index of the list
-	 * @param high the high index of the list
-	 * @return the item 
-	 */
-	private E binarySearch(E[] list, int index, int low, int high) {
-		if (low > high) {
-			return null;
-		} else {
-			int middle = (low + high) / 2;
-			
-			if (middle == index) {
-				return list[middle];
-				
-			// if the item being searched for comes before the item at the middle then the item 
-			// searched for must be in the lower half of the list
-			} else if (middle > index) {
-				return binarySearch(list, index, low, middle - 1);
-			} else {
-				return binarySearch(list, index, middle + 1, high);
-			}
 		}
 	}
 
