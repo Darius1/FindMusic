@@ -25,11 +25,11 @@ public class SearchGUITest {
 //	 */
 //	@Test
 //	public void testDefaultSearch() {
-//		assertThat(Long.valueOf(1), instanceOf(Long.class));
+////		assertThat(Long.valueOf(1), instanceOf(Long.class));
 //	    	
-//	   this.clickOn("Search");
-//	   this.clickOn("No");
-//	   this.clickOn("Return to Main Menu");
+////	   this.clickOn("Search");
+////	   this.clickOn("No");
+////	   this.clickOn("Return to Main Menu");
 //	 }
 
 }
