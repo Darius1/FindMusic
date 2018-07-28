@@ -1,16 +1,13 @@
 package personal.darius.search;
 
-import static org.junit.Assert.*;
-
 import java.util.concurrent.TimeoutException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import org.testfx.matcher.control.LabeledMatchers;
+import static org.testfx.api.FxAssert.verifyThat; 
 
 public class SearchGUITest extends ApplicationTest {
 
@@ -24,15 +21,18 @@ public class SearchGUITest extends ApplicationTest {
 	
 	/**
 	 * Tests the default search option and only displays songs for today
+	 * @throws Exception 
 	 *
 	 */
 	@Test
-	public void testDefaultSearch() {
-		assertThat(Long.valueOf(1), instanceOf(Long.class));    	
+	public void testDefaultSearch() throws Exception {
+		verifyThat(".button", LabeledMatchers.hasText("Search"));
 		
 		this.clickOn("Search");
 		this.clickOn("No");
 		this.clickOn("Return to Main Menu");
+		this.stop();
+		
 	 }
 
 }
