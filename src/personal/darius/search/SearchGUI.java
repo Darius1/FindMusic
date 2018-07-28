@@ -161,9 +161,18 @@ public class SearchGUI extends Application {
     	int songsReleasedToday = 0;
     	boolean checkedYesterday = false;
     	boolean dateChecked = false;
+    	Document doc = null;
     	
     	try {
-			Document doc = Jsoup.connect(website).get();
+    		
+    		if (website.equals("testPage.html")) {
+    			File input = new File(website);
+    			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
+    		} else {
+    			doc = Jsoup.connect(website).get();
+    		}
+    		
+			
 			Elements findSong = doc.select(".dailySongChart-item");
 
 			songsReleasedToday = findSong.size();
@@ -495,7 +504,7 @@ public class SearchGUI extends Application {
 				
 				// Default search
 				if (searchChoice == 1) {
-					findNewSongs("http://www.hotnewhiphop.com");
+					findNewSongs("testPage.html");
 					primaryStage.setScene(resultsScene);
 				} else if (searchChoice == 2) {
 					String artist = createSearchByArtistNamePopup();

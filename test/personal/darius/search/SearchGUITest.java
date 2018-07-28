@@ -2,6 +2,7 @@ package personal.darius.search;
 
 import java.util.concurrent.TimeoutException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
@@ -19,6 +20,17 @@ public class SearchGUITest extends ApplicationTest {
     	FxToolkit.setupApplication(SearchGUI.class);
 	}
 	
+	@After
+	public void tearDown() {
+		try {
+			FxToolkit.cleanupStages();
+			FxToolkit.hideStage();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Tests the default search option and only displays songs for today
 	 * @throws Exception 
@@ -31,7 +43,6 @@ public class SearchGUITest extends ApplicationTest {
 		this.clickOn("Search");
 		this.clickOn("No");
 		this.clickOn("Return to Main Menu");
-		this.stop();
 		
 	 }
 
