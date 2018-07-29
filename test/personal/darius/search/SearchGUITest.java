@@ -123,7 +123,7 @@ public class SearchGUITest extends ApplicationTest {
 	   this.clickOn("What artist would you like to search for?");
 	   this.write("Dave East");
 	   this.clickOn("OK");
-	   this.clickOn("Return to Main Menu");
+//	   this.clickOn("Search Results");
 	 }
 	
 	/**
