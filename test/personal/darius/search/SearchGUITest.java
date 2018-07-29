@@ -85,7 +85,7 @@ public class SearchGUITest extends ApplicationTest {
 		
 		this.clickOn("Options");
 		this.drag("Search Options");
-		this.clickOn("Return to Main Menu");
+		this.clickOn(0, 0);
 		this.clickOn("Return to Main Menu");
 		
 		// Tests searching for an artist that hasn't released any songs
