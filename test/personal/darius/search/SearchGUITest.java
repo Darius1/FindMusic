@@ -100,9 +100,9 @@ public class SearchGUITest extends ApplicationTest {
 		this.clickOn("Cancel");
 		
 		// Tests trying to enter a blank artist name in the search bar
-//		this.clickOn("Search");
-//		this.clickOn("OK");
-//		this.clickOn("Ok");
+		this.clickOn("Search");
+		this.clickOn("OK");
+		this.clickOn("Ok");
 	 }
 	
 	/**
@@ -120,9 +120,13 @@ public class SearchGUITest extends ApplicationTest {
 	   
 	   // Tests searching for an artist that has released songs
 	   this.clickOn("Search");
+	   System.out.println("1");
 	   this.clickOn("What artist would you like to search for?");
+	   System.out.println("2");
 	   this.write("Dave East");
+	   System.out.println("3");
 	   this.clickOn("OK");
+	   System.out.println("4");
 //	   this.clickOn("Search Results");
 	 }
 	
