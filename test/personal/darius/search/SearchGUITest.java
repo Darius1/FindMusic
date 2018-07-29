@@ -100,9 +100,9 @@ public class SearchGUITest extends ApplicationTest {
 		this.clickOn("Cancel");
 		
 		// Tests trying to enter a blank artist name in the search bar
-		this.clickOn("Search");
-		this.clickOn("OK");
-		this.clickOn("Ok");
+//		this.clickOn("Search");
+//		this.clickOn("OK");
+//		this.clickOn("Ok");
 	 }
 	
 	/**
