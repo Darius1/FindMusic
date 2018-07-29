@@ -103,13 +103,27 @@ public class SearchGUITest extends ApplicationTest {
 		this.clickOn("Search");
 		this.clickOn("OK");
 		this.clickOn("Ok");
-		
-		// Tests searching for an artist that has released songs
-		this.clickOn("Search");
-		this.clickOn("What artist would you like to search for?");
-		this.write("Dave");
-		this.clickOn("OK");
-		this.clickOn("Return to Main Menu");
+	 }
+	
+	/**
+	 * Tests searching for an artist that has released music
+	 *
+	 */
+	@Test
+	public void testArtistThatReleasedMusicSearch() {
+	   verifyThat(".button", LabeledMatchers.hasText("Search"));
+	   	
+	   this.clickOn("Options");
+	   this.drag("Search Options");
+	   this.clickOn(0, 0);
+	   this.clickOn("Return to Main Menu");
+	   
+	   // Tests searching for an artist that has released songs
+	   this.clickOn("Search");
+	   this.clickOn("What artist would you like to search for?");
+	   this.write("Dave East");
+	   this.clickOn("OK");
+	   this.clickOn("Return to Main Menu");
 	 }
 	
 	/**

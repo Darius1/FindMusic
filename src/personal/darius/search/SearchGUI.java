@@ -135,10 +135,18 @@ public class SearchGUI extends Application {
         	
             Elements findSong = doc.select(".dailySongChart-item");
 
-            // Example formatted date: Monday Jan 1, 2000		
-			LocalDate date = LocalDate.now();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
-			String currentDate = date.format(formatter);
+            String currentDate = "";
+            
+            // If the searchChoice is 4 we're testing and need to use a static date
+            if (searchChoice != 4) {
+            	// Example formatted date: Monday Jan 1, 2000		
+    			LocalDate date = LocalDate.now();
+    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+    			currentDate = date.format(formatter);
+            } else {
+            	currentDate = "Saturday Jul 28, 2018";
+            }
+            
 			
             for (int i = 0; i < findSong.size(); i++) {
             	if (findSong.get(i).text().contains(artist)) {
@@ -185,12 +193,20 @@ public class SearchGUI extends Application {
 
 			songsReleasedToday = findSong.size();
 			
+			String currentDate = "";
+			
 			for (int i = 0; i < songsReleasedToday; i++) {
 				
-				// Example formatted date: Monday Jan 1, 2000		
-				LocalDate date = LocalDate.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
-				String currentDate = date.format(formatter);
+				// If the searchChoice is 4 we're testing and need to use a static date
+				if (searchChoice != 4) {
+					// Example formatted date: Monday Jan 1, 2000		
+					LocalDate date = LocalDate.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+					currentDate = date.format(formatter);
+				} else {
+					currentDate = "Saturday Jul 28, 2018";
+				}
+				
 
 				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
 				// Need to check this tag to get the date information
