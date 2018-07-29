@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -116,6 +117,8 @@ public class SearchGUI extends Application {
      * or an error loading the website occurs
      */
     public boolean searchForRelease(String artist, String website, Stage primaryStage) {
+    	Document doc = null;
+    	
         try {
         	// Don't allow the user to enter a blank artist name
         	if (artist.equals("")) {
@@ -123,7 +126,13 @@ public class SearchGUI extends Application {
         		return false;
         	}
         	
-            Document doc = Jsoup.connect(website).get();
+        	if (website.equals("testPage.html")) {
+    			File input = new File(website);
+    			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
+    		} else {
+    			doc = Jsoup.connect(website).get();
+    		}
+        	
             Elements findSong = doc.select(".dailySongChart-item");
 
             // Example formatted date: Monday Jan 1, 2000		
@@ -164,7 +173,7 @@ public class SearchGUI extends Application {
     	Document doc = null;
     	
     	try {
-    		
+    		// Will use testPage.html for unit testing
     		if (website.equals("testPage.html")) {
     			File input = new File(website);
     			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
@@ -172,7 +181,6 @@ public class SearchGUI extends Application {
     			doc = Jsoup.connect(website).get();
     		}
     		
-			
 			Elements findSong = doc.select(".dailySongChart-item");
 
 			songsReleasedToday = findSong.size();
@@ -469,6 +477,8 @@ public class SearchGUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+    	boolean testMode = false;
+    	
     	primaryStage.setTitle("Find Music version 1.0");
     	
     	Label findMusicLabel = new Label("Find Music");
@@ -504,8 +514,9 @@ public class SearchGUI extends Application {
 				
 				// Default search
 				if (searchChoice == 1) {
-					findNewSongs("testPage.html");
+					findNewSongs("http://www.hotnewhiphop.com");
 					primaryStage.setScene(resultsScene);
+					
 				} else if (searchChoice == 2) {
 					String artist = createSearchByArtistNamePopup();
 					
@@ -533,9 +544,44 @@ public class SearchGUI extends Application {
 					findNewSongs("http://www.hotnewhiphop.com");
 					printSongs();
 					primaryStage.setScene(resultsScene);
+				} else if (searchChoice == 4) {
+					// runs the default search with the saved hnh webpage
+					findNewSongs("testPage.html");
+					primaryStage.setScene(resultsScene);				
+					primaryStage.setScene(mainScene);
+					
+					// runs the alphabetical search with the saved hnh webpage
+					findNewSongs("testPage.html");
+					printSongs();
+					primaryStage.setScene(resultsScene);
+					
+				} else if (searchChoice == 5) {
+					// runs the artist search with the saved hnh webpage
+					String artist = createSearchByArtistNamePopup();
+					
+					// Will return null if the user presses cancel when the
+					// artist search popup appears
+					if (artist == null) {
+						primaryStage.setScene(mainScene);
+					} else {
+						// Will return false if an empty string is passed in for an artist name
+						if (searchForRelease(artist, "testPage.html", primaryStage)) {
+							if (searchedSongs.isEmpty()) {
+								// display a popup letting the user know their selected artist hasn't
+								// released anything today
+								createNoSongsByArtistPopup(artist, primaryStage);
+							} else {
+								primaryStage.setScene(resultsScene);
+							}
+						} else {
+							// Reset to the main menu after the error popup is displayed
+							primaryStage.setScene(mainScene);
+						}
+					}
 				}
 			}
 		});
+    	
     	searchButton.setPrefSize(100, 20);
     	searchButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: #336699;");
     	
@@ -552,6 +598,7 @@ public class SearchGUI extends Application {
 				primaryStage.setScene(optionsScene);
 			}
 		});
+    	
     	optionsButton.setPrefSize(100, 20);
     	optionsButton.setStyle("-fx-background-color: #FFFFFF;" + "-fx-text-fill: #336699;");
     	
@@ -584,6 +631,7 @@ public class SearchGUI extends Application {
 				primaryStage.setScene(mainScene);
 			}
 		});
+    	
     	resultsReturn.setPrefSize(200, 20);
     	resultsReturn.setStyle("-fx-background-color: #336699;" + "-fx-text-fill: #FFFFFF;");
     	
@@ -654,6 +702,7 @@ public class SearchGUI extends Application {
     	optionsTop.setAlignment(Pos.CENTER);
     	optionsTop.getChildren().add(optionsLabel);
     	
+    	
     	VBox optionsList = new VBox();
     	HBox themeBox = new HBox();
     	
@@ -665,6 +714,32 @@ public class SearchGUI extends Application {
     	
     	// The options will be presented as a group of radio buttons
     	ToggleGroup optionButtons = new ToggleGroup();
+    	
+    	// Clicking the top of the options page will activate test mode
+    	// This will allow me to run the unit tests on a saved version of the hnh website
+    	optionsTop.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				if (optionButtons.getSelectedToggle() != null) {
+					optionButtons.getSelectedToggle().setSelected(false);
+				}
+				
+				searchChoice = 4;
+			}
+		});
+    	
+    	// Dragging on the top of the options page will also activate test mode
+    	optionsTop.setOnDragDetected(new EventHandler<Event>() {
+    		@Override
+			public void handle(Event event) {
+				if (optionButtons.getSelectedToggle() != null) {
+					optionButtons.getSelectedToggle().setSelected(false);
+				}
+
+				searchChoice = 5;
+			}
+    	});
     	
     	RadioButton defaultSearch = new RadioButton("Default Search");
     	defaultSearch.setToggleGroup(optionButtons);
