@@ -115,7 +115,7 @@ public class SearchGUITest extends ApplicationTest {
 	   	
 	   this.clickOn("Options");
 	   this.drag("Search Options");
-	   this.clickOn(0, 0);
+	   this.clickOn(".combo-box");
 	   this.clickOn("Return to Main Menu");
 	   
 	   // Tests searching for an artist that has released songs
