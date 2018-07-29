@@ -98,11 +98,11 @@ public class SearchGUITest extends ApplicationTest {
 		// Tests canceling a search
 		this.clickOn("Search");
 		this.clickOn("Cancel");
-//		
-//		// Tests trying to enter a blank artist name in the search bar
-//		this.clickOn("Search");
-//		this.clickOn("OK");
-//		this.clickOn("Ok");
+		
+		// Tests trying to enter a blank artist name in the search bar
+		this.clickOn("Search");
+		this.clickOn("OK");
+		this.clickOn("Ok");
 //		
 //		// Tests searching for an artist that has released songs
 //		this.clickOn("Search");
