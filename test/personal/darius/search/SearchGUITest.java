@@ -107,7 +107,7 @@ public class SearchGUITest extends ApplicationTest {
 		// Tests searching for an artist that has released songs
 		this.clickOn("Search");
 		this.clickOn("What artist would you like to search for?");
-		this.write("Dave East");
+		this.write("Dave");
 		this.clickOn("OK");
 		this.clickOn("Return to Main Menu");
 	 }
