@@ -31,13 +31,16 @@ import java.util.Scanner;
 public class SearchCLI {
 	
     /** Holds the website url that will be searched */
-    private String website;
+    @SuppressWarnings("unused")
+	private String website;
     
     /** Holds all of the scraped songs and sorts them alphabetically */
     private ArrayList<Song> sortedSongs;
     
     /** Reads the arguments supplied by the user on the command line */
     private CommandLine cmd;
+    
+    private int testNumber;
     
     /**
      * Search constructor that will be used for the CLI
@@ -47,6 +50,8 @@ public class SearchCLI {
     public SearchCLI(String[] args) {
     	cmd = null;
     	sortedSongs = new ArrayList<Song>();
+    	testNumber = 0;
+    	
     	if (setupCLI(args)) {
     		parseInput(args);
     	}
@@ -61,8 +66,16 @@ public class SearchCLI {
      * @return true if the artist released music on that date, false otherwise
      */
     public boolean searchForRelease(String artist, String website) {
+    	Document doc = null;
+    	
         try {
-            Document doc = Jsoup.connect(website).get();
+        	if (website.equals("testPage.html")) {
+        		File input = new File(website);
+    			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
+        	} else {
+        		doc = Jsoup.connect(website).get();
+        	}
+            
             Elements findSong = doc.select("div.cover-title");
             Elements findArtist = doc.select("div.dailySongChart-artist");
             int numberOfSongsToday = 0;
@@ -87,14 +100,6 @@ public class SearchCLI {
             return false;
         }
     }
-
-    /**
-     * Returns the website name
-     * @return website
-     */
-    public String getWebsite() {
-        return website;
-    }
     
     /**
      * Searches the specified website for songs that were released today and the previous day
@@ -104,19 +109,32 @@ public class SearchCLI {
     	int songsReleasedToday = 0;
     	boolean checkedYesterday = false;
     	boolean dateChecked = false;
+    	Document doc = null;
+    	String currentDate = "";
+    	String choice = "";
     	
     	try {
-			Document doc = Jsoup.connect(website).get();
+    		if (website.equals("testPage.html")) {
+    			File input = new File(website);
+    			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
+    		} else {
+    			doc = Jsoup.connect(website).get();
+    		}
+    		
 			Elements findSong = doc.select(".dailySongChart-item");
 
 			songsReleasedToday = findSong.size();
 			
 			for (int i = 0; i < songsReleasedToday; i++) {
 				
-				// Example formatted date: Monday Jan 1, 2000		
-				LocalDate date = LocalDate.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
-				String currentDate = date.format(formatter);
+				if (website.equals("testPage.html")) {
+					currentDate = "Saturday Jul 28, 2018";
+				} else {
+					// Example formatted date: Monday Jan 1, 2000		
+					LocalDate date = LocalDate.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+					currentDate = date.format(formatter);
+				}
 
 				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
 				// Need to check this tag to get the date information
@@ -136,17 +154,28 @@ public class SearchCLI {
 						System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
 						Scanner scan = new Scanner(System.in);
 						
-						String choice = scan.next();
-						choice = choice.toLowerCase();
-						
-						
+						if (testNumber == 1) {
+							choice = "no";
+						} else if (testNumber == 2) {
+							choice = "yes";
+						} else if (testNumber == 3) {
+							choice = "what?";
+						} else {
+							choice = scan.next();
+							choice = choice.toLowerCase();
+						}
+
 						while (!choice.startsWith("n")) {
 							while (!choice.startsWith("y") && !choice.startsWith("n")) {
 								System.out.println("Please enter either yes or no.");
 								System.out.println("Check songs from yesterday " + yesterday() + " (y/n)?");
 								
-								choice = scan.next();
-								choice = choice.toLowerCase();
+								if (testNumber == 3) {
+									choice = "yes";
+								} else {
+									choice = scan.next();
+									choice = choice.toLowerCase();
+								}
 								
 								if (choice.startsWith("n")) {
 									break;
@@ -212,19 +241,33 @@ public class SearchCLI {
     	int songsReleasedToday = 0;
     	boolean checkedYesterday = false;
     	boolean dateChecked = false;
+    	Document doc = null;
+    	String currentDate = "";
     	
     	try {
-			Document doc = Jsoup.connect(website).get();
+    		
+			if (website.equals("testPage.html")) {
+    			File input = new File(website);
+    			doc = Jsoup.parse(input, "UTF-8", "http://hotnewhiphop.com/");
+    		} else {
+    			doc = Jsoup.connect(website).get();
+    		}
+			
 			Elements findSong = doc.select(".dailySongChart-item");
 
 			songsReleasedToday = findSong.size();
 			
 			for (int i = 0; i < songsReleasedToday; i++) {
 				
-				// Example formatted date: Monday Jan 1, 2000		
-				LocalDate date = LocalDate.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
-				String currentDate = date.format(formatter);
+				if (website.equals("testPage.html")) {
+					currentDate = "Saturday Jul 28, 2018";
+				} else {
+					// Example formatted date: Monday Jan 1, 2000		
+					LocalDate date = LocalDate.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE MMM dd, yyyy");
+					currentDate = date.format(formatter);
+				}
+				
 
 				// HotNewHipHop places the dailySongChart-day-date class tag on the very first song posted each day 
 				// Need to check this tag to get the date information
@@ -287,6 +330,9 @@ public class SearchCLI {
         Date yesterday = cal.getTime();
         
         DateFormat dateFormat = new SimpleDateFormat("EEEE MMM dd, yyyy");
+        if (testNumber != 0) {
+        	return "Friday Jul 27, 2018";
+        }
         return dateFormat.format(yesterday);
     }
     
@@ -317,6 +363,7 @@ public class SearchCLI {
     	findMusicOptions.addOption("a", "artist", true, "searches for newly released music by the specified artist");
     	findMusicOptions.addOption("v", "version", false, "displays the version information");
     	findMusicOptions.addOption("o", "order", false, "orders the released songs alphabetically and displays them");
+    	findMusicOptions.addOption("t", "test", false, "tests all of the SearchCLI methods");
     	
     	CommandLineParser parser = new DefaultParser();
     	
@@ -361,6 +408,35 @@ public class SearchCLI {
     	} else if (cmd.hasOption("o")) {
     		findNewSongsNoPrompts("http://www.hotnewhiphop.com");
     		printSongs();
+    	} else if (cmd.hasOption("t")) {
+    		// default search for only songs released today
+    		testNumber = 1;
+    		findNewSongs("testPage.html");
+    		// need to reset the arraylist so it will be empty on each test run
+    		sortedSongs = new ArrayList<Song>();
+    		
+    		// default search for songs released both days
+    		testNumber = 2;
+    		findNewSongs("testPage.html");
+    		sortedSongs = new ArrayList<Song>();
+    		
+    		// default search with invalid input
+    		testNumber = 3;
+    		findNewSongs("testPage.html");
+    		sortedSongs = new ArrayList<Song>();
+    		
+    		// artist search with artist that hasn't released music
+    		searchForRelease("Drake", "testPage.html");
+    		sortedSongs = new ArrayList<Song>();
+    		
+    		// artist search with artist that has released music
+    		searchForRelease("Dave East", "testPage.html");
+    		sortedSongs = new ArrayList<Song>();
+    		
+    		// ordered search results
+    		findNewSongsNoPrompts("testPage.html");
+    		printSongs();
+    		sortedSongs = new ArrayList<Song>();
     	}
     }
 
