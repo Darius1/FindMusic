@@ -1,9 +1,10 @@
 <h1 align = "center"> FindMusic </h1>    
 <div align = "center">
  
-![Crates.io](https://img.shields.io/crates/l/rustc-serialize.svg)
+![License](https://img.shields.io/crates/l/rustc-serialize.svg)
 ![GitHub release](https://img.shields.io/badge/release-v1.0-red.svg)
 [![Build Status](https://travis-ci.org/Darius1/FindMusic.svg?branch=master)](https://travis-ci.org/Darius1/FindMusic)
+[![Coverage Status](https://coveralls.io/repos/github/Darius1/FindMusic/badge.svg)](https://coveralls.io/github/Darius1/FindMusic)
 </div>
  
 The Find Music program allows a user to quickly find music that has been released during the past 48 hours. There are 3 search options: default, search by artist name, and a search that orders the results alphabetically. Currently the only website supported is http://www.hotnewhiphop.com/.
