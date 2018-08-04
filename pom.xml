@@ -74,7 +74,7 @@
 	<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
 	<dependency>
 	    <groupId>org.hamcrest</groupId>
-	    <artifactId>hamcrest-core</artifactId>
+	    <artifactId>hamcrest-library</artifactId>
 	    <version>1.3</version>
 	    <scope>test</scope>
 	</dependency>
@@ -84,33 +84,17 @@
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>8.0.11</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 	<dependency>
-	    <groupId>com.google.guava</groupId>
-	    <artifactId>guava</artifactId>
-	    <version>25.1-jre</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.loadui/testFx -->
-	<dependency>
-	    <groupId>org.loadui</groupId>
-	    <artifactId>testFx</artifactId>
-	    <version>3.1.2</version>
+	    <groupId>org.testfx</groupId>
+	    <artifactId>testfx-core</artifactId>
+	    <version>4.0.13-alpha</version>
 	    <scope>test</scope>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.testfx/testfx-junit -->
 	<dependency>
 	    <groupId>org.testfx</groupId>
 	    <artifactId>testfx-junit</artifactId>
+	    <version>4.0.13-alpha</version>
 	    <scope>test</scope>
 	</dependency>
   </dependencies>
-  <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>org.testfx</groupId>
-  			<artifactId>testfx-junit</artifactId>
-  			<version>4.0.1-alpha</version>
-  		</dependency>
-  	</dependencies>
-  </dependencyManagement>
 </project>
