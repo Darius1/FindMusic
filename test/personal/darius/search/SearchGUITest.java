@@ -10,8 +10,19 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import static org.testfx.api.FxAssert.verifyThat;
 
+/**
+ * Tests the SearchGUI methods
+ * 
+ * @author Darius McFarland
+ *
+ */
 public class SearchGUITest extends ApplicationTest {
 
+	/**
+	 * Prior to each test, the GUI is started from scratch
+	 *
+	 * @throws TimeoutException Occurs when the GUI takes too long to be registered
+	 */
 	@Before
 	public void setup() throws TimeoutException {
 		FxToolkit.registerPrimaryStage();
@@ -20,6 +31,9 @@ public class SearchGUITest extends ApplicationTest {
     	FxToolkit.setupApplication(SearchGUI.class);
 	}
 	
+	/**
+	 * After each test, the GUI is closed so that it can be started fresh for the next test
+	 */
 	@After
 	public void tearDown() {
 		try {
@@ -32,7 +46,7 @@ public class SearchGUITest extends ApplicationTest {
 	
 	/**
 	 * Tests the default search option and only displays songs for today
-	 * @throws Exception 
+	 * @throws Exception if an element is unable to be clicked
 	 *
 	 */
 	@Test
@@ -54,7 +68,7 @@ public class SearchGUITest extends ApplicationTest {
 	
 	/**
 	 * Tests the default search option and only displays songs for both days
-	 * @throws Exception 
+	 * @throws Exception if an element is unable to be clicked
 	 *
 	 */
 	@Test
@@ -76,7 +90,7 @@ public class SearchGUITest extends ApplicationTest {
 	
 	/**
 	 * Tests the artist search option
-	 * @throws Exception 
+	 * @throws Exception if an element is unable to be clicked
 	 *
 	 */
 	@Test

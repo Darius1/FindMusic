@@ -2,8 +2,6 @@ package personal.darius.search;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
-import org.junit.Test;
-import org.testfx.api.FxToolkit;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -45,7 +43,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program and will display
@@ -292,7 +289,7 @@ public class SearchGUI extends Application {
     /**
      * Prints out songs in alphabetical order
      */
-    public void printSongs() {
+    private void printSongs() {
     	Sorter<Song> sorter = new Sorter<Song>();
     	
     	sorter.alphabeticalSort(sortedSongs);
@@ -310,7 +307,7 @@ public class SearchGUI extends Application {
      *
      * @return true if the user clicks yes, no otherwise
      */
-    public boolean createShowSongsFromYesterdayPopup() {
+    private boolean createShowSongsFromYesterdayPopup() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(null);
  
@@ -348,7 +345,7 @@ public class SearchGUI extends Application {
      *
      * @return a String containing the artist's name
      */
-    public String createSearchByArtistNamePopup() {
+    private String createSearchByArtistNamePopup() {
     	try {
 			TextInputDialog dialog = new TextInputDialog();
 			 
@@ -418,7 +415,7 @@ public class SearchGUI extends Application {
      * @param artist the artist being searched for
      * @param primaryStage the main window of the program
      */
-    public void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
+    private void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(null);
  
@@ -455,7 +452,7 @@ public class SearchGUI extends Application {
      * @param color the theme color the user has selected
      * @return the hex code associated with the color specified by the user
      */
-    public String changeTheme(String color) {
+    private String changeTheme(String color) {
     	if (color.equals("Blue")) {
     		return BLUE;
     	} else if (color.equals("Light Blue")) {
