@@ -2,6 +2,8 @@ package personal.darius.search;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
+import org.junit.Test;
+import org.testfx.api.FxToolkit;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -43,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 
 /**
  * This class will handle all of the search functionality in the FindMusic program and will display
@@ -215,9 +218,6 @@ public class SearchGUI extends Application {
 						
 						dateChecked = true;
 					} else {
-						if (!dateChecked) {
-							System.out.println("no songs released today.");
-						}
 
 						if (createShowSongsFromYesterdayPopup()) {
 							if (findSong.get(i).getElementsByClass("dailySongChart-day-date").text().equals(yesterday())) {
@@ -310,7 +310,7 @@ public class SearchGUI extends Application {
      *
      * @return true if the user clicks yes, no otherwise
      */
-    private boolean createShowSongsFromYesterdayPopup() {
+    public boolean createShowSongsFromYesterdayPopup() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(null);
  
@@ -348,7 +348,7 @@ public class SearchGUI extends Application {
      *
      * @return a String containing the artist's name
      */
-    private String createSearchByArtistNamePopup() {
+    public String createSearchByArtistNamePopup() {
     	try {
 			TextInputDialog dialog = new TextInputDialog();
 			 
@@ -381,7 +381,7 @@ public class SearchGUI extends Application {
      *
      * @param primaryStage the main window of the program
      */
-    private void createInvalidArtistNamePopup(Stage primaryStage) {
+    public void createInvalidArtistNamePopup(Stage primaryStage) {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle(null);
  
@@ -418,7 +418,7 @@ public class SearchGUI extends Application {
      * @param artist the artist being searched for
      * @param primaryStage the main window of the program
      */
-    private void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
+    public void createNoSongsByArtistPopup(String artist, Stage primaryStage) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(null);
  
@@ -455,7 +455,7 @@ public class SearchGUI extends Application {
      * @param color the theme color the user has selected
      * @return the hex code associated with the color specified by the user
      */
-    private String changeTheme(String color) {
+    public String changeTheme(String color) {
     	if (color.equals("Blue")) {
     		return BLUE;
     	} else if (color.equals("Light Blue")) {
